@@ -1,6 +1,6 @@
 ---
 
-- name: Check if cgroup memory and swapaccount in kernel
+- name: Check if cgroup memory in kernel
   shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "cgroup_enable=memory"
   register: cgroug_memory
   ignore_errors: true
@@ -13,7 +13,7 @@
   shell: update-grub2
   when: cgroug_memory.stdout == "0"
 
-- name: Check if cgroup memory and swapaccount in kernel
+- name: Check if cgroup v2 in kernel
   shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "systemd.unified_cgroup_hierarchy"
   register: cgroup_v2
   ignore_errors: true
