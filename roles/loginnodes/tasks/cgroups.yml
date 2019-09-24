@@ -1,15 +1,15 @@
 - name: Check if cgroup memory in kernel
   shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "cgroup_enable=memory"
-  register: cgroug_memory
+  register: cgroup_memory
   ignore_errors: true
 
 - name: Enable cgroup memory
   lineinfile: dest="/etc/default/grub" regexp='GRUB_CMDLINE_LINUX_DEFAULT="(.*)"' line='GRUB_CMDLINE_LINUX_DEFAULT="\1 cgroup_enable=memory"' backrefs=yes
-  when: cgroug_memory.stdout == "0"
+  when: cgroup_memory.stdout == "0"
 
 - name: update-grub
   shell: update-grub2
-  when: cgroug_memory.stdout == "0"
+  when: cgroup_memory.stdout == "0"
 
 - name: Check if cgroup v2 in kernel
   shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "systemd.unified_cgroup_hierarchy"
