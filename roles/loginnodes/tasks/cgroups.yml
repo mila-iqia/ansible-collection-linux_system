@@ -1,3 +1,5 @@
+---
+  
 - name: Check if cgroup memory in kernel
   shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "cgroup_enable=memory"
   register: cgroup_memory
