@@ -1,5 +1,5 @@
 ---
-  
+
 - name: Check if cgroup memory in kernel
   shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "cgroup_enable=memory"
   register: cgroup_memory
@@ -39,3 +39,16 @@
     owner: root
     group: root
     mode: 644
+
+- name: Ensure sshd uses PAM
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^UsePAM.+'
+    line: 'UsePAM yes'
+
+# Restart SSHd and daemon_reload at the same time necessary for user-slices
+- name: Restart service sshd
+  systemd:
+    name: sshd.service
+    state: restarted
+    daemon_reload: yes
