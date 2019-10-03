@@ -40,11 +40,24 @@
     group: root
     mode: 644
 
+# Get the list of users
+- getent:
+    database: passwd
+
+- name: Create link to limits
+  file:
+    src: /etc/systemd/system/user-.slice.d
+    dest: /etc/systemd/system/user-{{getent_passwd[item][1]}}.slice.d
+    state: link
+  when: getent_passwd[item][2] == "1500000000"
+  with_items: "{{ getent_passwd.keys() }}"
+
 - name: Ensure sshd uses PAM
   lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: '^UsePAM.+'
     line: 'UsePAM yes'
+  register: added_pam
 
 # Restart SSHd and daemon_reload at the same time necessary for user-slices
 - name: Restart service sshd
@@ -52,3 +65,4 @@
     name: sshd.service
     state: restarted
     daemon_reload: yes
+  when: added_pam.changed
