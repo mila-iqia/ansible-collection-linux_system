@@ -40,17 +40,18 @@
     group: root
     mode: 644
 
-# Get the list of users
+# Get the list of users, run only on 1 host
 - getent:
     database: passwd
+  when: inventory_hostname == 'login-2.server.mila.quebec'
 
 - name: Create link to limits
   file:
     src: /etc/systemd/system/user-.slice.d
-    dest: /etc/systemd/system/user-{{getent_passwd[item][1]}}.slice.d
+    dest: /etc/systemd/system/user-{{hostvars['login-2.server.mila.quebec']['getent_passwd'][item][1]}}.slice.d
     state: link
-  when: getent_passwd[item][2] == "1500000000"
-  with_items: "{{ getent_passwd.keys() }}"
+  when: hostvars['login-2.server.mila.quebec']['getent_passwd'][item][2] == "1500000000"
+  with_items: "{{ hostvars['login-2.server.mila.quebec']['getent_passwd'].keys() }}"
 
 - name: Ensure sshd uses PAM
   lineinfile:
