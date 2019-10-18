@@ -38,7 +38,7 @@
     dest: /etc/systemd/system/user-.slice.d/limits.conf
     owner: root
     group: root
-    mode: 644
+    mode: 0644
 
 # Get the list of users, run only on 1 host
 - getent:
