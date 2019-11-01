@@ -34,7 +34,7 @@
 
 - name: Copy default limit drop-in
   copy:
-    src: ../files/login-limits.conf
+    src: login-limits.conf
     dest: /etc/systemd/system/user-.slice.d/limits.conf
     owner: root
     group: root
