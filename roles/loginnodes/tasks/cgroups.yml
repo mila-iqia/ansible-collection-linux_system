@@ -19,7 +19,11 @@
   ignore_errors: true
 
 - name: Enable cgroup memory
-  lineinfile: dest="/etc/default/grub" regexp='GRUB_CMDLINE_LINUX_DEFAULT="(.*)"' line='GRUB_CMDLINE_LINUX_DEFAULT="\1 systemd.unified_cgroup_hierarchy"' backrefs=yes
+  lineinfile:
+    dest: "/etc/default/grub"
+    regexp: 'GRUB_CMDLINE_LINUX_DEFAULT="(.*)"'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 systemd.unified_cgroup_hierarchy"'
+    backrefs: yes
   when: cgroup_v2.stdout == "0"
 
 - name: update-grub
@@ -41,7 +45,8 @@
     mode: 0644
 
 # Get the list of users, run only on 1 host
-- getent:
+- nme: Get list of users
+  getent:
     database: passwd
   when: inventory_hostname == 'login-2'
 
@@ -58,12 +63,4 @@
     dest: /etc/ssh/sshd_config
     regexp: '^UsePAM.+'
     line: 'UsePAM yes'
-  register: added_pam
-
-# Restart SSHd and daemon_reload at the same time necessary for user-slices
-- name: Restart service sshd
-  systemd:
-    name: sshd.service
-    state: restarted
-    daemon_reload: yes
-  when: added_pam.changed
+  notify: restart sshd
