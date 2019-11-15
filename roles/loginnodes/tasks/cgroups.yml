@@ -45,7 +45,7 @@
     mode: 0644
 
 # Get the list of users, run only on 1 host
-- nme: Get list of users
+- name: Get list of users
   getent:
     database: passwd
   when: inventory_hostname == 'login-2'
