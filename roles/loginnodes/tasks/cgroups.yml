@@ -49,16 +49,22 @@
   getent:
     database: passwd
   delegate_to: 'login-2'
-  delegate_facts: True
+  #  delegate_facts: True
   # when: inventory_hostname == 'login-2'
+
+- debug:
+    var: getent_passwd
 
 - name: Create link to limits
   file:
     src: /etc/systemd/system/user-.slice.d
-    dest: /etc/systemd/system/user-{{ hostvars['login-2']['getent_passwd'][item][1] }}.slice.d
+    dest: /etc/systemd/system/user-{{ getent_passwd[item][1] }}.slice.d
+    #dest: /etc/systemd/system/user-{{ hostvars['login-2']['getent_passwd'][item][1] }}.slice.d
     state: link
-  when: hostvars['login-2']['getent_passwd'][item][2] == "1500000000"
-  with_items: "{{ hostvars['login-2']['getent_passwd'].keys() }}"
+  when: getent_passwd[item][2] == "1500000000"
+  #when: hostvars['login-2']['getent_passwd'][item][2] == "1500000000"
+  with_items: "{{ getent_passwd.keys() }}"
+  #with_items: "{{ hostvars['login-2']['getent_passwd'].keys() }}"
 
 - name: Ensure sshd uses PAM
   lineinfile:
