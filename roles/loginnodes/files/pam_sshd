@@ -55,3 +55,6 @@ session [success=ok ignore=ignore module_unknown=ignore default=bad]        pam_
 
 # Standard Un*x password updating.
 @include common-password
+
+# Google 2FA
+auth       required     pam_google_authenticator.so nullok
