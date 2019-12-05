@@ -1,6 +1,6 @@
 # PAM configuration for the Secure Shell service
-auth    required        pam_tally2.so   deny=5  unlock_time=600 file=/var/log/tallylog
-account required        pam_tally2.so   deny=5  unlock_time=600 file=/var/log/tallylog
+# auth    required        pam_tally2.so   deny=5  unlock_time=600 file=/var/log/tallylog
+# account required        pam_tally2.so   deny=5  unlock_time=600 file=/var/log/tallylog
 
 # Standard Un*x authentication.
 @include common-auth
