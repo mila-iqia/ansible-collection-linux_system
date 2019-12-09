@@ -1,6 +1,6 @@
 ---
 
-- name: Install google-authenticator Debian
+- name: Install fail2ban service
   apt:
     name:
       - fail2ban
@@ -9,8 +9,18 @@
   copy:
     src: fail2ban/defaults-debian.conf
     dest: /etc/fail2ban/jail.d
+  notify: restart fail2ban
 
 - name: Jail whitelist
   copy:
     src: fail2ban/defaults-debian.conf
     dest: /etc/fail2ban/jail.d
+  notify: restart fail2ban
+
+- name: Force fail2ban Restart
+  meta: flush_handlers
+
+- name: Check fail2ban is started
+  systemd:
+    name: fail2ban.service
+    state: started

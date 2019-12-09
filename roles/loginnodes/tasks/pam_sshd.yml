@@ -1,0 +1,23 @@
+---
+
+
+- name: Install google-authenticator Debian
+  apt:
+    name:
+      - libpam-google-authenticator
+
+- name: PAM sshd
+  copy:
+    src: pam_sshd
+    dest: /etc/pam.d/sshd
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Banner sshd
+  template:
+    src: motd_ssh.j2
+    dest: "{{ sshd_banner_path }}"
+    owner: root
+    group: root
+    mode: 0644
