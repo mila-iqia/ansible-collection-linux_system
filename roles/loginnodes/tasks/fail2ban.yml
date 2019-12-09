@@ -13,7 +13,7 @@
 
 - name: Jail whitelist
   copy:
-    src: fail2ban/defaults-debian.conf
+    src: fail2ban/ignore.conf
     dest: /etc/fail2ban/jail.d
   notify: restart fail2ban
 
