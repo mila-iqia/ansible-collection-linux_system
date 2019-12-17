@@ -51,7 +51,7 @@
 
 - debug:
     msg: "!!! Cgroups V2 is not enabled ! Reboot to enable"
-  when: cgroups_details.stat.isdir is not defined or cgroups_details.stat.isdir == False
+  when: cgroups_details.stat.isdir is not defined or not cgroups_details.stat.isdir
 
 - include_tasks: cgroups_user_conf.yml
   when: not skip_cgroups
