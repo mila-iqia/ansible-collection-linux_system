@@ -56,12 +56,10 @@ session [success=ok ignore=ignore module_unknown=ignore default=bad]        pam_
 # Standard Un*x password updating.
 @include common-password
 
-{% if inventory_hostname == 'login-3' %}
 # DUO
-auth	required	/lib64/security/pam_duo.so
-{% endif %}
+# auth	required	/lib64/security/pam_duo.so
 
-{% if inventory_hostname == 'login-4' %}
+{% if inventory_hostname == 'login-4' or inventory_hostname == 'login-3' %}
 # Google 2FA
 auth       required     pam_google_authenticator.so nullok
 {% endif %}
