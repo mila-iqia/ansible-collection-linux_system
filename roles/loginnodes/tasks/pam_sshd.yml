@@ -1,6 +1,5 @@
 ---
 
-
 - name: Install google-authenticator Debian
   apt:
     name:

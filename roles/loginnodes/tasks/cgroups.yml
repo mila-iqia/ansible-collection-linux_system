@@ -44,25 +44,5 @@
     group: root
     mode: 0644
 
-# Get the list of users, run only on 1 host
-- name: Get list of users
-  getent:
-    database: passwd
-  delegate_to: 'login-2'
-  #  delegate_facts: True
-  # when: inventory_hostname == 'login-2'
-
-- name: Create link to limits
-  file:
-    src: /etc/systemd/system/user-.slice.d
-    dest: /etc/systemd/system/user-{{ getent_passwd[item][1] }}.slice.d
-    state: link
-  when: getent_passwd[item][2] == "1500000000"
-  with_items: "{{ getent_passwd.keys() | list }}"
-
-- name: Ensure sshd uses PAM
-  lineinfile:
-    dest: /etc/ssh/sshd_config
-    regexp: '^UsePAM.+'
-    line: 'UsePAM yes'
-  notify: restart sshd
+- include_tasks: cgroups_user_conf.yml
+  when: not skip_cgroups
