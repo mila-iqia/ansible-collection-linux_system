@@ -7,8 +7,8 @@
       - libpam-google-authenticator
 
 - name: PAM sshd
-  copy:
-    src: pam_sshd
+  template:
+    src: pam_sshd.j2
     dest: /etc/pam.d/sshd
     owner: root
     group: root
