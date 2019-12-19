@@ -13,6 +13,22 @@
     group: root
     mode: 0644
 
+- name: PAM common-auth
+  template:
+    src: pam_common-auth.j2
+    dest: /etc/pam.d/common-auth
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Allow local accounts and IP to bypass 2fa
+  copy:
+    src: access-local.conf
+    dest: /etc/security/access-local.conf
+    owner: root
+    group: root
+    mode: 0644
+
 - name: Banner sshd
   template:
     src: motd_ssh.j2
