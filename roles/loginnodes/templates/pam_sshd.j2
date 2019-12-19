@@ -56,10 +56,12 @@ session [success=ok ignore=ignore module_unknown=ignore default=bad]        pam_
 # Standard Un*x password updating.
 @include common-password
 
-# DUO
-# auth	required	/lib64/security/pam_duo.so
+{% if inventory_hostname == 'login-3' or inventory_hostname == 'login-4' %}
+# Bypass 2FA on local network and admins
+auth sufficient pam_access.so accessfile=/etc/security/access-local.conf
+session sufficient pam_access.so accessfile=/etc/security/access-local.conf
 
-{% if inventory_hostname == 'login-4' or inventory_hostname == 'login-3' %}
 # Google 2FA
-auth       required     pam_google_authenticator.so nullok
+session   optional    pam_exec.so stdout /var/2fa/.config/2fa.sh
+auth      required    pam_google_authenticator.so secret=/var/2fa/${USER}/.google_authenticator nullok
 {% endif %}
