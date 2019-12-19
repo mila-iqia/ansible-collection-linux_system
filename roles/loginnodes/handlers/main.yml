@@ -5,3 +5,9 @@
     name: fail2ban.service
     state: restarted
     enabled: yes
+
+- name: remount
+  command: mount -a
+  args:
+    warn: no
+  become: true

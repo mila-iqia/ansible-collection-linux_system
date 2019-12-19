@@ -1,0 +1,18 @@
+---
+
+- name: Create Mount directory
+  file:
+    path: /var/2fa
+    state: directory
+
+- name: Fstab entry
+  lineinfile:
+    dest: /etc/fstab
+    regexp: '.+\s+/var/2fa\s+.+'
+    line: >
+      cortex:/export/2fa
+      /var/2fa
+      nfs4
+      rw,sec=sys,{{ nfs_default_opts }}
+      0 0
+  notify: remount
