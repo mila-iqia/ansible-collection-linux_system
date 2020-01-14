@@ -7,13 +7,13 @@
 
 - name: Jail defaults
   template:
-    src: fail2ban/defaults-debian.conf
+    src: fail2ban/defaults-debian.conf.j2
     dest: /etc/fail2ban/jail.d
   notify: restart fail2ban
 
 - name: Jail whitelist
   template:
-    src: fail2ban/ignore.conf
+    src: fail2ban/ignore.conf.j2
     dest: /etc/fail2ban/jail.d
   notify: restart fail2ban
 
