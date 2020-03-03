@@ -6,5 +6,5 @@
       dest: "/etc/cvmfs/config.d/{{ cvmfs_config_repo.repository.repository }}.conf"
       regexp: "^{{ item.split('=')[0] }}=.*"
       line: "{{ item }}"
-    with_items: "{{ cvmfs_config_repo.repository.repository.client_options }}"
+    with_items: "{{ cvmfs_config_repo.repository.client_options }}"
     when: cvmfs_config_repo and cvmfs_config_repo_supported
