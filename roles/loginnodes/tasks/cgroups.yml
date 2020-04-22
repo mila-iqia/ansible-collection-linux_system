@@ -54,4 +54,4 @@
   when: cgroups_details.stat.isdir is not defined or not cgroups_details.stat.isdir
 
 - include_tasks: cgroups_user_conf.yml
-  when: not skip_cgroups
+  when: skip_cgroups|bool == false
