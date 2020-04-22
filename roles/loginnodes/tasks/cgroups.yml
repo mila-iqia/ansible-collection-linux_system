@@ -49,9 +49,5 @@
     path: /sys/fs/cgroup/user.slice
   register: cgroups_details
 
-- debug:
-    msg: "!!! Cgroups V2 is not enabled ! Reboot to enable"
-  when: cgroups_details.stat.isdir is not defined or not cgroups_details.stat.isdir
-
 - include_tasks: cgroups_user_conf.yml
-  when: skip_cgroups|bool == false
+  when: not skip_cgroups|bool
