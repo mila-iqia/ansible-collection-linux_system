@@ -4,6 +4,7 @@
   shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "cgroup_enable=memory"
   register: cgroup_memory
   ignore_errors: true
+  failed_when: false
 
 - name: Enable cgroup memory
   lineinfile: dest="/etc/default/grub" regexp='GRUB_CMDLINE_LINUX_DEFAULT="(.*)"' line='GRUB_CMDLINE_LINUX_DEFAULT="\1 cgroup_enable=memory"' backrefs=yes
