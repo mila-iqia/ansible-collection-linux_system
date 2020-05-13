@@ -21,6 +21,14 @@
     group: root
     mode: 0644
 
+- name: PAM common-session
+  template:
+    src: pam_common-session.j2
+    dest: /etc/pam.d/common-session
+    owner: root
+    group: root
+    mode: 0644
+
 - name: Allow local accounts and IP to bypass 2fa
   copy:
     src: access-local.conf
