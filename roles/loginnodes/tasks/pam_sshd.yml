@@ -1,9 +1,11 @@
 ---
 
+# Too old
 - name: Install google-authenticator Debian
   apt:
     name:
       - libpam-google-authenticator
+    state: absent
 
 - name: PAM sshd
   template:
