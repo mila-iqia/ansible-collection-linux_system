@@ -56,12 +56,12 @@ session [success=ok ignore=ignore module_unknown=ignore default=bad]        pam_
 # Standard Un*x password updating.
 @include common-password
 
-{% if inventory_hostname == 'login-3' or inventory_hostname == 'login-4' %}
+{% if inventory_hostname == 'ci-loginnode' %}
 # Bypass 2FA on local network and admins
-#auth sufficient pam_access.so accessfile=/etc/security/access-local.conf
-#session sufficient pam_access.so accessfile=/etc/security/access-local.conf
+auth sufficient pam_access.so accessfile=/etc/security/access-local.conf
+session sufficient pam_access.so accessfile=/etc/security/access-local.conf
 
 # Google 2FA
 #session   optional    pam_exec.so stdout /var/2fa/.config/2fa.sh
-#auth      required    pam_google_authenticator.so secret=/var/2fa/${USER}/.google_authenticator nullok
+auth      required    pam_google_authenticator.so secret=${HOME}/.google_authenticator nullok grace_period=86400 [authtok_prompt=2FA token: ]
 {% endif %}
