@@ -23,6 +23,15 @@
     group: root
     mode: 0644
 
+- name: PAM common-auth with PrivacyIDEA
+  template:
+    src: pam_common-auth-idea.j2
+    dest: /etc/pam.d/common-auth-idea
+    owner: root
+    group: root
+    mode: 0644
+  when: inventory_hostname == "ci-loginnode"
+
 - name: PAM common-session
   template:
     src: pam_common-session.j2
