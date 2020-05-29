@@ -1,18 +1,29 @@
 ---
 
-- name: Create Mount directory
+# TODO: delete after a while
+- name: Remove google-authenticator Debian
+  apt:
+    name:
+      - libpam-google-authenticator
+    state: absent
+
+- name: Suppress Mount directory
   file:
     path: /var/2fa
     state: directory
+
+- name: return motd to registered var
+  command: umount -l /var/2fa
+  ignore_errors: yes
+  failed_when: false
 
 - name: Fstab entry
   lineinfile:
     dest: /etc/fstab
     regexp: '.+\s+/var/2fa\s+.+'
-    line: >
-      cortex:/export/2fa
-      /var/2fa
-      nfs4
-      rw,sec=sys,{{ nfs_default_opts }}
-      0 0
-  notify: remount
+    state: absent
+
+- name: Remove access-local.conf
+  file:
+    path: /etc/security/access-local.conf
+    state: absent
