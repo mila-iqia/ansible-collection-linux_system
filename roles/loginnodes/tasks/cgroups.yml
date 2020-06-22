@@ -32,7 +32,7 @@
   when: cgroup_v2.stdout == "0"
 
 - name: Install Systemd 240 compiled with GLIBC 2.27
-  shell: >
+  command: |
     dpkg -i
       /ai/packages/x86_64/debian/systemd240/systemd_240-6ubuntu5.8_amd64.deb \
       /ai/packages/x86_64/debian/systemd240/systemd-sysv_240-6ubuntu5.8_amd64.deb \
