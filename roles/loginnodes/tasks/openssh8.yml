@@ -1,8 +1,8 @@
 ---
 
 - name: Install Openssh 8.2
-  command: |
-    dpkg -i
+  command: >
+    dpkg -i \
       /ai/packages/x86_64/debian/openssh8.2/openssh-client_8.2p1-4_amd64.deb \
       /ai/packages/x86_64/debian/openssh8.2/openssh-sftp-server_8.2p1-4_amd64.deb \
       /ai/packages/x86_64/debian/openssh8.2/openssh-server_8.2p1-4_amd64.deb
