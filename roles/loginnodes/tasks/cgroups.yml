@@ -31,6 +31,10 @@
   shell: update-grub2
   when: cgroup_v2.stdout == "0"
 
+- name: Get Systemd version
+  shell: systemd --version | head -n1 | awk '{print $2}'
+  register: systemd_version
+
 - name: Install Systemd 240 compiled with GLIBC 2.27
   command: >
     dpkg -i \
@@ -40,6 +44,7 @@
       /ai/packages/x86_64/debian/systemd240/libsystemd-dev_240-6ubuntu5.8_amd64.deb \
       /ai/packages/x86_64/debian/systemd240/libsystemd0_240-6ubuntu5.8_amd64.deb \
       /ai/packages/x86_64/debian/systemd240/libpam-systemd_240-6ubuntu5.8_amd64.deb
+  when: systemd_version.stdout != "240"
 
 - name: Create base directory
   file:

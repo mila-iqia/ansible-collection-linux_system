@@ -1,5 +1,9 @@
 ---
 
+- name: Get Openssh version
+  shell: ssh -V
+  register: openssh_version
+
 - name: Install Openssh 8.2
   command: >
     dpkg -i \
@@ -7,3 +11,4 @@
       /ai/packages/x86_64/debian/openssh8.2/openssh-client_8.2p1-4_amd64.deb \
       /ai/packages/x86_64/debian/openssh8.2/openssh-sftp-server_8.2p1-4_amd64.deb \
       /ai/packages/x86_64/debian/openssh8.2/openssh-server_8.2p1-4_amd64.deb
+  when: openssh_version.stdout != "OpenSSH_8.2p1 Ubuntu-4, OpenSSL 1.1.1  11 Sep 2018"
