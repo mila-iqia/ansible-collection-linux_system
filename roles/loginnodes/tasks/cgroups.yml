@@ -31,7 +31,16 @@
   shell: update-grub2
   when: cgroup_v2.stdout == "0"
 
-# Systemd 240 will not need symlinks as the user- will be default for everyone
+- name: Install Systemd 240 compiled with GLIBC 2.27
+  apt:
+   deb:
+      - /ai/packages/x86_64/debian/systemd240/systemd_240-6ubuntu5.8_amd64.deb
+      - /ai/packages/x86_64/debian/systemd240/systemd-sysv_240-6ubuntu5.8_amd64.deb
+      - /ai/packages/x86_64/debian/systemd240/libnss-systemd_240-6ubuntu5.8_amd64.deb
+      - /ai/packages/x86_64/debian/systemd240/libsystemd-dev_240-6ubuntu5.8_amd64.deb
+      - /ai/packages/x86_64/debian/systemd240/libsystemd0_240-6ubuntu5.8_amd64.deb
+      - /ai/packages/x86_64/debian/systemd240/libpam-systemd_240-6ubuntu5.8_amd64.deb
+
 - name: Create base directory
   file:
      path: /etc/systemd/system/user-.slice.d
@@ -49,6 +58,3 @@
   stat:
     path: /sys/fs/cgroup/user.slice
   register: cgroups_details
-
-- include_tasks: cgroups_user_conf.yml
-  when: not skip_cgroups|bool
