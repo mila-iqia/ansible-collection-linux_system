@@ -15,4 +15,4 @@
       /ai/packages/x86_64/debian/openssh8.2/openssh-server_8.2p1-4_amd64.deb
   environment:
     DEBIAN_FRONTEND: noninteractive
-  when: openssh_version.stdout != "OpenSSH_8.2p1 Ubuntu-4, OpenSSL 1.1.1  11 Sep 2018"
+  when: '"OpenSSH_8.2p1" not in openssh_version.stdout'
