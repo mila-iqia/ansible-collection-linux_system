@@ -1,8 +1,8 @@
 ---
 
 - name: Install Openssh 8.2
-  apt:
-   deb:
-      - /ai/packages/x86_64/debian/systemd240/openssh-client_8.2p1-4_amd64.deb
-      - /ai/packages/x86_64/debian/systemd240/openssh-sftp-server_8.2p1-4_amd64.deb
-      - /ai/packages/x86_64/debian/systemd240/openssh-server_8.2p1-4_amd64.deb
+  shell: >
+    dpkg -i
+      /ai/packages/x86_64/debian/systemd240/openssh-client_8.2p1-4_amd64.deb \
+      /ai/packages/x86_64/debian/systemd240/openssh-sftp-server_8.2p1-4_amd64.deb \
+      /ai/packages/x86_64/debian/systemd240/openssh-server_8.2p1-4_amd64.deb
