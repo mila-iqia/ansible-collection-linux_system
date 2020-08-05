@@ -7,3 +7,17 @@
     line: "{{ item }}"
   with_items: "{{ cvmfs_config_repo.repository.client_options }}"
   when: cvmfs_config_repo and cvmfs_config_repo_supported
+
+- name: Set env for Variant Symlinks
+  copy:
+    content: |
+      ## This file is maintained by Ansible - CHANGES WILL BE OVERWRITTEN
+      ARCH={{ ARCH }}
+      PROCESSOR_ARCHITECTURE={{ PROCESSOR_ARCHITECTURE }}
+      ID={{ ansible_facts['os_family'] | lower }}
+    dest: /etc/cvmfs/default.d/01-env.conf
+    owner: root
+    group: root
+    mode: 0444
+  notify:
+    - reload autofs
