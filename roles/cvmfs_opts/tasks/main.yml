@@ -3,12 +3,18 @@
 - name: moi
   debug:
     msg: "{{ cvmfs_config_repo }}"
+  tags:
+    - cvmfs
 - name: moi
   debug:
     var: "{{ cvmfs_config_repo|bool }}"
+  tags:
+    - cvmfs
 - name: moi
   debug:
     var: "{{ cvmfs_config_repo_supported }}"
+  tags:
+    - cvmfs
 
 # Complement Galaxy CVMFS role
 - name: Additional options for CernVM-FS config repository
