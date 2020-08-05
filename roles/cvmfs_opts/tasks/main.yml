@@ -6,7 +6,9 @@
     regexp: "^{{ item.split('=')[0] }}=.*"
     line: "{{ item }}"
   with_items: "{{ cvmfs_config_repo.repository.client_options }}"
-  when: cvmfs_config_repo and cvmfs_config_repo_supported
+  when: cvmfs_config_repo|bool and cvmfs_config_repo_supported
+  tags:
+    - cvmfs
 
 - name: Set env for Variant Symlinks
   copy:
@@ -21,4 +23,6 @@
     mode: 0444
   notify:
     - reload autofs
-  when: cvmfs_config_repo and cvmfs_config_repo_supported
+  when: cvmfs_config_repo|bool and cvmfs_config_repo_supported
+  tags:
+    - cvmfs
