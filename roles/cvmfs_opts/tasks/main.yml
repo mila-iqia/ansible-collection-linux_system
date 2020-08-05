@@ -5,14 +5,14 @@
     msg: "{{ cvmfs_config_repo }}"
   tags:
     - cvmfs
-- name: moi
+- name: moi2
   debug:
-    var: "{{ cvmfs_config_repo is defined }}"
+    msg: "{{ cvmfs_config_repo is defined }}"
   tags:
     - cvmfs
-- name: moi
+- name: moi3
   debug:
-    var: "{{ cvmfs_config_repo_supported }}"
+    msg: "{{ cvmfs_config_repo_supported }}"
   tags:
     - cvmfs
 
