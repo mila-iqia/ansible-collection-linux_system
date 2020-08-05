@@ -1,4 +1,15 @@
 ---
+
+- name: moi
+  debug:
+    var: cvmfs_config_repo
+- name: moi
+  debug:
+    var: cvmfs_config_repo|bool
+- name: moi
+  debug:
+    var: cvmfs_config_repo_supported
+
 # Complement Galaxy CVMFS role
 - name: Additional options for CernVM-FS config repository
   lineinfile:
