@@ -1,0 +1,9 @@
+---
+
+- name: Banner sshd
+  template:
+    src: motd_ssh.j2
+    dest: "{{ sshd_banner_path }}"
+    owner: root
+    group: root
+    mode: 0644
