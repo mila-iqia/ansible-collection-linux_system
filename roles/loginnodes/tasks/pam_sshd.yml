@@ -16,13 +16,23 @@
     group: root
     mode: 0644
 
-- name: PAM common-auth with PrivacyIDEA
-  template:
-    src: pam_common-auth-idea.j2
-    dest: /etc/pam.d/common-auth-idea
-    owner: root
-    group: root
-    mode: 0644
+https://git.server.mila.quebec/api/v4/projects/83/jobs/artifacts/master/raw/dist/privacyidea_pam-2.11.dev0-py3-none-any.whl?job=package
+
+# Install PrivacyIdea module
+- name: Install PrivacyIDEA module
+  block:
+    - name: PrivacyIDEA Pip module
+      pip:
+        name: "{{ privacyidea_repo }}/{{ privacyidea_package }}?job={{ privacyidea_job }}"
+        executable: pip3
+
+    - name: PAM common-auth with PrivacyIDEA
+      template:
+        src: pam_common-auth-idea.j2
+        dest: /etc/pam.d/common-auth-idea
+        owner: root
+        group: root
+        mode: 0600
   when: inventory_hostname == "ci-loginnode"
 
 - name: PAM common-session

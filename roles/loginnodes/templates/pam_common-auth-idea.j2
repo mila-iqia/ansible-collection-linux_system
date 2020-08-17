@@ -1,6 +1,15 @@
-auth    [default=1 success=ok]          pam_localuser.so
+auth    [default=ignore success=ok]          pam_localuser.so
+#auth    [default=1 success=ok]          pam_localuser.so
+auth    [success=3 authinfo_unavail=ignore default=die]      pam_python.so \
+        /usr/local/lib/python3.6/dist-packages/privacyidea_pam.py \
+        url={{ privacyidea_server }} \
+        prompt={{ privacyidea_prompt }} \
+        realm={{ privacyidea_realm }} \
+        api_token={{ privacyidea_api_token }} \
+        grace={{ privacyidea_grace_period }} \
+        debug
 auth    [success=2 default=ignore]      pam_unix.so nullok_secure
-auth    [success=1 default=ignore]      pam_python.so /home/quentin-local/pam_python/privacyidea_pam.py url=https://privacyidea.server.mila.quebec prompt=privacyIDEA_Authentication realm=mila grace=1440 debug
+auth    [success=1 default=ignore]      pam_sss.so
 auth    requisite                       pam_deny.so
 auth    required                        pam_permit.so
 auth    optional                        pam_cap.so
