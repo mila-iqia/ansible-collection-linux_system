@@ -16,8 +16,6 @@
     group: root
     mode: 0644
 
-https://git.server.mila.quebec/api/v4/projects/83/jobs/artifacts/master/raw/dist/privacyidea_pam-2.11.dev0-py3-none-any.whl?job=package
-
 # Install PrivacyIdea module
 - name: Install PrivacyIDEA module
   block:
@@ -34,6 +32,8 @@ https://git.server.mila.quebec/api/v4/projects/83/jobs/artifacts/master/raw/dist
         group: root
         mode: 0600
   when: inventory_hostname == "ci-loginnode"
+  tags:
+    - 2fa
 
 - name: PAM common-session
   template:
