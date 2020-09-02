@@ -8,13 +8,19 @@
 - name: Jail defaults
   template:
     src: fail2ban/defaults-debian.conf.j2
-    dest: /etc/fail2ban/jail.d
+    dest: /etc/fail2ban/jail.d/defaults-debian.conf
+    owner: root
+    group: root
+    mode: 0644
   notify: restart fail2ban
 
 - name: Jail whitelist
   template:
     src: fail2ban/ignore.conf.j2
-    dest: /etc/fail2ban/jail.d
+    dest: /etc/fail2ban/jail.d/ignore.conf
+    owner: root
+    group: root
+    mode: 0644
   notify: restart fail2ban
 
 - name: Force fail2ban Restart
