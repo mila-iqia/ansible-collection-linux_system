@@ -3,4 +3,4 @@
   cron:
     name: "Miniscratch cleanup"
     special_time: hourly
-    job: "find /miniscratch/ -type d \( -path /miniscratch/.keep $(printf " -o -path /miniscratch/%s " $(cat /miniscratch/.keep)) \) -prune -o -atime +60 -exec echo rm -f {} \; "
+    job: "find /miniscratch/ -type d \\( -path /miniscratch/.keep $(printf " -o -path /miniscratch/%s " $(cat /miniscratch/.keep)) \\) -prune -o -atime +{{ miniscratch_retention_days }} -exec echo rm -f {} \; "
