@@ -1,0 +1,75 @@
+---
+
+- name: disable sssd
+  systemd:
+    name: sssd.service
+    state: stopped
+    enabled: no
+  ignore_errors: true
+
+- name: Clone Current User DB
+  git:
+    repo: "{{ gsuite_slurm_db }}"
+    dest: /tmp/slurmdb/
+    clone: yes
+  tags:
+  - skip_ansible_lint
+  delegate_to: localhost
+  run_once: true
+
+- name: disable sssd
+  systemd:
+    name: sssd.service
+    state: stopped
+    enabled: no
+  ignore_errors: true
+
+- name: Clone Current User DB
+  git:
+    repo: "{{ gsuite_slurm_db }}"
+    dest: /tmp/slurmdb/
+    clone: yes
+  tags:
+  - skip_ansible_lint
+  delegate_to: localhost
+  run_once: true
+
+- name: Send Groups
+  copy:
+    src: /tmp/slurmdb/SLURM-group
+    dest: /etc/group
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Send Password
+  copy:
+    src: /tmp/slurmdb/SLURM-passwd
+    dest: /etc/passwd
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Update sacctmgr
+  block:
+    - name: Send SLURM Accounts
+      copy:
+        src: /tmp/slurmdb/SLURM-saccounts
+        dest: /tmp/SLURM-saccounts
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Add SLURM Accounts
+      command: "/opt/slurm/bin/sacctmgr -i load file=/tmp/SLURM-saccounts clean"
+      register: sacctmgr_output
+
+    - debug: msg="{{ sacctmgr_output.stdout }}"
+
+    - name: Send notification message via Slack
+      slack:
+        token: "{{ lookup('env','ANSIBLE_SLACK_HOOK') }}"
+        msg: "{{ sacctmgr_output.stdout }}"
+      when: "'Nothing new added' not in sacctmgr_output.stdout"
+
+  when: inventory_hostname == 'slurm'

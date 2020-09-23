@@ -1,0 +1,6 @@
+---
+- name: cron for Miniscratch cleanup
+  cron:
+    name: "Miniscratch cleanup"
+    special_time: hourly
+    job: "find /miniscratch/ -type d \( -path /miniscratch/.keep $(printf " -o -path /miniscratch/%s " $(cat /miniscratch/.keep)) \) -prune -o -atime +60 -exec echo rm -f {} \; "
