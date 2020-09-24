@@ -2,7 +2,6 @@
 - name: cron for Miniscratch cleanup
   cron:
     name: "Miniscratch cleanup"
-    special_time: hourly
     minute: "0"
     hour: "*/2"
     job: |
