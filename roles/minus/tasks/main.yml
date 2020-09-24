@@ -2,9 +2,8 @@
 - name: cron for Miniscratch cleanup
   cron:
     name: "Miniscratch cleanup"
-    minute: "0"
-    hour: "*/2"
-    job: |
+    special_time: daily
+    job: >
       find /miniscratch/ -type d \\(
       -path /miniscratch/.keep
       $(printf \" -o -path /miniscratch/%s \" $(cat /miniscratch/.keep))
