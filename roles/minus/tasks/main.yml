@@ -4,12 +4,12 @@
     name: "Miniscratch cleanup"
     special_time: daily
     job: >
-      find /miniscratch/ -type d \\(
+      find /miniscratch/ -type d \(
       -path /miniscratch/.keep
-      $(printf \" -o -path /miniscratch/%s \" $(cat /miniscratch/.keep))
-      \\)
+      $(printf " -o -path /miniscratch/%s " $(cat /miniscratch/.keep))
+      \)
       -prune -o
       -atime +{{ miniscratch_retention_days }}
-      -exec echo rm -f {} \\;
+      -exec echo rm -f {} \;
   tags:
     - cron
