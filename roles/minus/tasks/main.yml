@@ -10,6 +10,6 @@
       \)
       -prune -o
       -atime +{{ miniscratch_retention_days }}
-      -exec echo rm -f {} \;
+      -exec rm -f {} \;
   tags:
     - cron
