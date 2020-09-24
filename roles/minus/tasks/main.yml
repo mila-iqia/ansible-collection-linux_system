@@ -12,3 +12,5 @@
       -prune -o
       -atime +{{ miniscratch_retention_days }}
       -exec echo rm -f {} \\;
+  tags:
+    - cron
