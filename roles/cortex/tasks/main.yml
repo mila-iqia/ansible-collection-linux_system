@@ -1,0 +1,6 @@
+---
+- name: cron Projects quota
+  cron:
+    name: "Projects quota"
+    special_time: daily
+    job: cortex_tmp/data/projects 200gb 1000K
