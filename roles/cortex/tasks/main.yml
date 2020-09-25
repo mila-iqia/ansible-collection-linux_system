@@ -22,3 +22,17 @@
     mode: 0644
   tags:
     - slurm_accounts
+
+- name: Create user project folder
+  script: scripts/make_user_folders.sh /tmp/mila_groups /export/data/projects
+  args:
+    executable: /bin/bash
+    removes: /tmp/mila_groups
+  register: projects_new_folder
+  tags:
+    - slurm_accounts
+
+- debug:
+    var: projects_new_folder.stdout_lines
+  tags:
+    - slurm_accounts
