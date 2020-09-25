@@ -1,8 +1,24 @@
 ---
+
 - name: cron Projects quota
   cron:
     name: "Projects quota"
     special_time: daily
-    job: cortex_tmp/data/projects 200gb 1000K
+    job: >
+      /cvmfs/config.mila.quebec/etc/rc.d/zfs_quota.sh
+      --groups
+      cortex_tmp/data/projects
+      200gb
+      1000K
   tags:
     - cron
+
+- name: Send UserDB Groups
+  copy:
+    src: /tmp/slurmdb/SLURM-group
+    dest: /tmp/mila_groups
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - slurm_accounts

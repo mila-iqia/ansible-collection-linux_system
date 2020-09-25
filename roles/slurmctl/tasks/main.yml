@@ -7,33 +7,6 @@
     enabled: no
   ignore_errors: true
 
-- name: Clone Current User DB
-  git:
-    repo: "{{ gsuite_slurm_db }}"
-    dest: /tmp/slurmdb/
-    clone: yes
-  tags:
-  - skip_ansible_lint
-  delegate_to: localhost
-  run_once: true
-
-- name: disable sssd
-  systemd:
-    name: sssd.service
-    state: stopped
-    enabled: no
-  ignore_errors: true
-
-- name: Clone Current User DB
-  git:
-    repo: "{{ gsuite_slurm_db }}"
-    dest: /tmp/slurmdb/
-    clone: yes
-  tags:
-  - skip_ansible_lint
-  delegate_to: localhost
-  run_once: true
-
 - name: Send Groups
   copy:
     src: /tmp/slurmdb/SLURM-group
