@@ -1,0 +1,8 @@
+#!/bin/bash
+# This script will take an argument $IP from fail2ban
+
+#
+
+ip=$1
+iprhost=(rhost=$ip)
+grep  -i -Rw "$iprhost" /var/log/auth.log | awk -F " " '{print $15}'| awk -F "=" '{print $2}' | grep "\S" | head -n1
