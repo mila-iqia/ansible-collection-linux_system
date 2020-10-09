@@ -3,7 +3,7 @@
   cron:
     name: "Miniscratch cleanup"
     special_time: daily
-    disabled: true
+    disabled: false
     job: >
       find /miniscratch/ -type d \(
       -path /miniscratch/.keep
@@ -11,6 +11,8 @@
       \)
       -prune -o
       -atime +{{ miniscratch_retention_days }}
+      -ctime +{{ miniscratch_retention_days }}
+      -mtime +{{ miniscratch_retention_days }}
       -exec rm -rf {} \;
   tags:
     - cron
