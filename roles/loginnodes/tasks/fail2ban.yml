@@ -14,6 +14,30 @@
     mode: 0644
   notify: restart fail2ban
 
+- name: Jail local
+  template:
+    src: fail2ban/jail.local.j2
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart fail2ban
+- name: slack-notify
+  template:
+    src: fail2ban/slack-notify.conf.j2
+    dest: /etc/fail2ban/action.d/slack-notify.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart fail2ban
+- name: username
+  template:
+    src: fail2ban/username.sh.j2
+    dest: /etc/fail2ban/action.d/username.sh
+    owner: root
+    group: root
+    mode: 0755
+  notify: restart fail2ban
 - name: Jail whitelist
   template:
     src: fail2ban/ignore.conf.j2
