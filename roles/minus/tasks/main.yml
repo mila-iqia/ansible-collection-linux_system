@@ -5,9 +5,8 @@
     special_time: weekly
     disabled: false
     job: >
-      find /miniscratch/ -type d \(
-      -path /miniscratch/
-      -o -path /miniscratch/.keep
+      find /miniscratch/* -type d \(
+      -path /miniscratch/.keep
       $(printf " -o -path /miniscratch/%s " $(cat /miniscratch/.keep))
       \)
       -prune -o
