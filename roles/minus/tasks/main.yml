@@ -6,7 +6,8 @@
     disabled: false
     job: >
       find /miniscratch/ -type d \(
-      -path /miniscratch/.keep
+      -path /miniscratch/
+      -o -path /miniscratch/.keep
       $(printf " -o -path /miniscratch/%s " $(cat /miniscratch/.keep))
       \)
       -prune -o
