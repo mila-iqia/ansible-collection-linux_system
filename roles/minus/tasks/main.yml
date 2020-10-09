@@ -3,6 +3,7 @@
   cron:
     name: "Miniscratch cleanup"
     special_time: daily
+    disabled: true
     job: >
       find /miniscratch/ -type d \(
       -path /miniscratch/.keep
