@@ -2,7 +2,7 @@
 - name: cron for Miniscratch cleanup
   cron:
     name: "Miniscratch cleanup"
-    special_time: daily
+    special_time: weakly
     disabled: false
     job: >
       find /miniscratch/ -type d \(
