@@ -1,5 +1,5 @@
 [sshd]
 enabled = true
-bantime  = 1h
-findtime  = 5m
-maxretry = 10
+bantime  = {{ fail2ban_bantime }}
+findtime  = {{ fail2ban_findtime }}
+maxretry = {{ fail2ban_maxretry }}

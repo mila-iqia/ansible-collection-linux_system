@@ -1,0 +1,10 @@
+[DEFAULT]
+# Destination email address
+destemail = {{ mila_admin_mail }}
+
+# Sender email address
+sender = fail2ban@<fq-hostname>
+
+# Add Slack notifications
+action = %(action_mwl)s
+          slack-notify

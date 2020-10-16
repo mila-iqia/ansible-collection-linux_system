@@ -14,15 +14,16 @@
     mode: 0644
   notify: restart fail2ban
 
-- name: Jail local
+- name: Sendmail to admins
   template:
-    src: fail2ban/jail.local.j2
-    dest: /etc/fail2ban/jail.local
+    src: fail2ban/sendmail.conf.j2
+    dest: /etc/fail2ban/jail.d/sendmail.conf
     owner: root
     group: root
     mode: 0644
   notify: restart fail2ban
-- name: slack-notify
+
+- name: Slack notifications
   template:
     src: fail2ban/slack-notify.conf.j2
     dest: /etc/fail2ban/action.d/slack-notify.conf
@@ -30,14 +31,16 @@
     group: root
     mode: 0644
   notify: restart fail2ban
-- name: username
+
+- name: Find username script
   template:
     src: fail2ban/username.sh.j2
-    dest: /etc/fail2ban/action.d/username.sh
+    dest: "{{ fail2ban_find_username_path }}"
     owner: root
     group: root
     mode: 0755
   notify: restart fail2ban
+
 - name: Jail whitelist
   template:
     src: fail2ban/ignore.conf.j2
