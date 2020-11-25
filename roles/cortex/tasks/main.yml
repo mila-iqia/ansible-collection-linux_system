@@ -8,8 +8,8 @@
       /cvmfs/config.mila.quebec/etc/rc.d/zfs_quota.sh
       --groups
       cortex_tmp/data/projects
-      200gb
-      1000K
+      {{ projects_spacequota }}
+      {{ projects_objquota }}
   tags:
     - cron
 
