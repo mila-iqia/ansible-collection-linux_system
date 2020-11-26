@@ -15,13 +15,13 @@
 
 - name: Send UserDB Groups
   copy:
-    src: /tmp/slurmdb/SLURM-group
+    src: /tmp/slurmdb/LDAP-group
     dest: /tmp/mila_groups
     owner: root
     group: root
     mode: 0644
   tags:
-    - slurm_accounts
+    - ldap_mirror_accounts
 
 - name: Create user project folder
   script: scripts/make_user_folders.sh /tmp/mila_groups /export/data/projects
@@ -30,9 +30,9 @@
     removes: /tmp/mila_groups
   register: projects_new_folder
   tags:
-    - slurm_accounts
+    - ldap_mirror_accounts
 
 - debug:
     var: projects_new_folder.stdout_lines
   tags:
-    - slurm_accounts
+    - ldap_mirror_accounts

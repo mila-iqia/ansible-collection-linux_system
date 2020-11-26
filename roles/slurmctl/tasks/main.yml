@@ -9,7 +9,7 @@
 
 - name: Send Groups
   copy:
-    src: /tmp/slurmdb/SLURM-group
+    src: /tmp/slurmdb/LDAP-group
     dest: /etc/group
     owner: root
     group: root
@@ -17,7 +17,7 @@
 
 - name: Send Password
   copy:
-    src: /tmp/slurmdb/SLURM-passwd
+    src: /tmp/slurmdb/LDAP-passwd
     dest: /etc/passwd
     owner: root
     group: root
@@ -27,14 +27,14 @@
   block:
     - name: Send SLURM Accounts
       copy:
-        src: /tmp/slurmdb/SLURM-saccounts
-        dest: /tmp/SLURM-saccounts
+        src: /tmp/slurmdb/LDAP-saccounts
+        dest: /tmp/LDAP-saccounts
         owner: root
         group: root
         mode: 0644
 
     - name: Add SLURM Accounts
-      command: "/opt/slurm/bin/sacctmgr -i load file=/tmp/SLURM-saccounts clean"
+      command: "/opt/slurm/bin/sacctmgr -i load file=/tmp/LDAP-saccounts clean"
       register: sacctmgr_output
 
     - debug: msg="{{ sacctmgr_output.stdout }}"

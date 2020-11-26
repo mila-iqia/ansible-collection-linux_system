@@ -16,3 +16,27 @@
       -exec rm -rf {} \;
   tags:
     - cron
+
+- name: Send UserDB Groups
+  copy:
+    src: /tmp/slurmdb/LDAP-group_of_groups
+    dest: /tmp/mila_group_of_groups
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - ldap_mirror_accounts
+
+- name: Create user project folder
+  script: scripts/make_user_folders.sh /tmp/mila_group_of_groups /miniscratch
+  args:
+    executable: /bin/bash
+    removes: /tmp/mila_group_of_groups
+  register: projects_new_folder
+  tags:
+    - ldap_mirror_accounts
+
+- debug:
+    var: projects_new_folder.stdout_lines
+  tags:
+    - ldap_mirror_accounts
