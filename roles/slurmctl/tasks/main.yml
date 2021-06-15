@@ -41,7 +41,7 @@
 
     - name: Send notification message via Slack
       slack:
-        token: https://hooks.slack.com/services/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
+        token: "{{ lookup('env','ANSIBLE_SLACK_HOOK') }}"
         msg: "{{ sacctmgr_output.stdout }}"
       when: "'Nothing new added' not in sacctmgr_output.stdout"
 
