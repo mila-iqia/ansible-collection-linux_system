@@ -50,8 +50,9 @@
 
 - name: Create base directory
   file:
-     path: /etc/systemd/system/user-.slice.d
-     state: directory
+    path: /etc/systemd/system/user-.slice.d
+    state: directory
+    mode: 0755
 
 - name: Copy default limit drop-in
   copy:
