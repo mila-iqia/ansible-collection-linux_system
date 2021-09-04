@@ -1,0 +1,63 @@
+---
+
+- name: Create mila_admins group
+  group:
+    name: mila_admins
+    state: present
+    gid: "{{ mila_admins_gid }}"
+
+- name: Allow 'admins' group to have passwordless sudo
+  copy:
+    content: '%mila_admins ALL=(ALL) NOPASSWD:ALL'
+    dest: /etc/sudoers.d/mila_admins
+    mode: 0440
+
+- name: Create Mila admins
+  user:
+    name: "{{ item.name }}-local"
+    shell: /bin/bash
+    create_home: yes
+    group: mila_admins
+    uid: "{{ item.uid }}"
+    password: "{{ item.password }}"
+    update_password: always
+  with_items:
+    - "{{ mila_admins }}"
+
+- name: Remove local keys
+  file:
+    path: "/home/{{ item.name }}-local/.ssh/authorized_keys"
+    state: absent
+  with_items:
+    - "{{ mila_admins }}"
+
+- name: Remove gone admins
+  user:
+    name: "{{ item }}-local"
+    state: absent
+    remove: yes
+  with_items:
+    - "{{ admins_gone }}"
+  ignore_errors: True
+  no_log: True
+
+- name: Set authorized key for ansible
+  authorized_key:
+    user: ansible
+    state: present
+    key: "{{ ansible_pub_key }}"
+
+- name: Ensure authorized_keys cache exists
+  file:
+    path: "{{ mila_authorized_keys_cache }}"
+    state: directory
+    mode: 0700
+    owner: nobody
+
+- name: Copy authorized_key template
+  template:
+    src: sshd/mila_authorized_keys.j2
+    dest: "{{ mila_authorized_keys_path }}"
+    mode: 0755
+    owner: root
+    group: root

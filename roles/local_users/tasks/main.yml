@@ -1,0 +1,10 @@
+---
+# Add local users
+- import_tasks: admins.yml
+  tags:
+    - local_admins
+    - local_users
+- import_tasks: operators.yml
+  tags:
+    - local_operators
+    - local_users

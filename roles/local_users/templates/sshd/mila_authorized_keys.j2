@@ -1,0 +1,11 @@
+#!/bin/bash
+CACHE={{ mila_authorized_keys_cache }}/mila
+GDOCS='{{ mila_authorized_keys_url }}'
+USER=$1
+GKEY=$(mktemp) || exit 1
+
+if curl -sL "$GDOCS" --connect-timeout 10 --max-time 10 > "$GKEY" 2>/dev/null; then
+  cat "$GKEY" > "$CACHE"
+  rm -f "$GKEY"
+fi
+cat "$CACHE" | grep -A2 "$USER" | tail -n2
