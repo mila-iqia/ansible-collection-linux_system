@@ -1,0 +1,4 @@
+---
+# Connect to Gsuite LDAP
+- import_tasks: gsuite.yml
+  when: gsuite|default(true)|bool

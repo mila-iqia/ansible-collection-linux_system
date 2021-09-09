@@ -1,0 +1,52 @@
+---
+- name: Create Certs Directory
+  file:
+    path: /etc/sssd/certs/
+    state: directory
+    mode: 0700
+
+- name: Clone Certs
+  git:
+    repo: "{{ gsuite_certs_repo }}"
+    dest: /tmp/gsuite_certs/
+    clone: yes
+  tags:
+  - skip_ansible_lint
+  delegate_to: localhost
+  run_once: true
+
+- name: Send Certs
+  copy:
+    src: /tmp/gsuite_certs/
+    dest: /etc/sssd/certs/
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Install sssd
+  package:
+   name:
+      - sssd
+      - sssd-common
+
+- name: Install sssd
+  package:
+   name:
+      - sssd-tools
+      - libpam-sss
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Generate /etc/sssd.conf
+  template:
+    src: sssd.conf.j2
+    dest: /etc/sssd/sssd.conf
+    owner: root
+    group: root
+    mode: 0600
+  notify: restart sssd
+
+- name: restart sssd
+  systemd:
+    name: sssd.service
+    state: started
+    enabled: yes
