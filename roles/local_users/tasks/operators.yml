@@ -1,0 +1,39 @@
+---
+
+- name: Create mila_operators group
+  group:
+    name: mila_operators
+    state: present
+    gid: "{{ mila_operators_gid }}"
+
+- name: Add operator
+  include_tasks: create_operator.yml
+  with_items: "{{ mila_operators }}"
+  when: inventory_hostname in item.hosts
+
+- name: Remove gone operators groups
+  group:
+    name: "{{ item }}-local"
+    state: absent
+    remove: yes
+  with_items:
+    - "{{ operators_gone }}"
+  ignore_errors: True
+  no_log: True
+
+- name: Remove gone operators usernames
+  user:
+    name: "{{ item }}-local"
+    state: absent
+    remove: yes
+  with_items:
+    - "{{ operators_gone }}"
+  ignore_errors: True
+  no_log: True
+
+- name: Remove gone operators sudo
+  file:
+    path: "/etc/sudoers.d/{{ item }}"
+    state: absent
+  with_items:
+    - "{{ operators_gone }}"
