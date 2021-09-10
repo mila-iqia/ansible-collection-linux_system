@@ -1,0 +1,16 @@
+---
+# Activate containers repo for Shifter
+
+- name: Create containers directory
+  file:
+    path: /network/containers
+    state: directory
+    mode: 0700
+
+- name: Mount /network/containers
+  mount:
+    src: cortex:/export/containers
+    path: /network/containers
+    state: mounted
+    fstype: nfs4
+    opts: "ro,{{ nfs_default_opts }}"
