@@ -1,0 +1,4 @@
+---
+# Activate module
+- import_tasks: modules.yml
+
