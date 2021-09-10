@@ -1,0 +1,4 @@
+---
+# Activate timectl
+- import_tasks: time.yml
+  when: baremetal|default(true)|bool
