@@ -1,0 +1,33 @@
+[sssd]
+services = nss, pam
+domains = mila.quebec
+
+[domain/mila.quebec]
+ldap_tls_cert = /etc/sssd/certs/{{ gsuite_cert_name }}.crt
+ldap_tls_key = /etc/sssd/certs/{{ gsuite_cert_name }}.key
+ldap_uri = ldaps://ldap.google.com
+ldap_search_base = {{ gsuite_search_base }}
+ldap_user_search_base = {{ gsuite_user_search_base }}
+ldap_group_search_base = {{ gsuite_group_search_base }}
+id_provider = ldap
+auth_provider = ldap
+ldap_schema = rfc2307bis
+ldap_user_name = posixUid
+ldap_user_uuid = entryUUID
+ldap_user_gecos = googleUid
+
+# Access control
+access_provider = simple
+simple_allow_groups = {{ gsuite_authorized_groups }}
+
+# Set default Home to Flash server
+override_homedir = /home/mila/%l/%u
+
+# Allow same UID/GID
+auto_private_groups = true
+
+# No cache cleaning
+ldap_purge_cache_timeout = 0
+
+# Do not download full list for getent group
+ignore_group_members = true
