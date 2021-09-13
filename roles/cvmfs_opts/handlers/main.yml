@@ -1,0 +1,6 @@
+---
+- name: reload autofs
+  systemd:
+    name: autofs.service
+    state: reloaded
+    enabled: yes

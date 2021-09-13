@@ -1,0 +1,6 @@
+---
+- name: restart sssd
+  systemd:
+    name: sssd.service
+    state: restarted
+    enabled: yes
