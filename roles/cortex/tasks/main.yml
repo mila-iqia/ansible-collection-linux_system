@@ -24,7 +24,7 @@
     - ldap_mirror_accounts
 
 - name: Create user project folder
-  script: scripts/make_user_folders.sh /tmp/mila_groups /export/data/projects
+  script: ../../users/scripts/make_user_folders.sh /tmp/mila_groups /export/data/projects
   args:
     executable: /bin/bash
     removes: /tmp/mila_groups
