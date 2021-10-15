@@ -10,6 +10,7 @@
     repo: "{{ gsuite_certs_repo }}"
     dest: /tmp/gsuite_certs/
     clone: yes
+  become: false
   tags:
   - skip_ansible_lint
   delegate_to: localhost
@@ -33,6 +34,7 @@
   package:
    name:
       - sssd-tools
+      - libnss-sss
       - libpam-sss
   when: ansible_facts['os_family'] == 'Debian'
 
