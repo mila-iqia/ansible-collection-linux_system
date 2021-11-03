@@ -38,11 +38,4 @@
       register: sacctmgr_output
 
     - debug: msg="{{ sacctmgr_output.stdout }}"
-
-    - name: Send notification message via Slack
-      slack:
-        token: "{{ ansible_slack_token }}"
-        msg: "{{ sacctmgr_output.stdout }}"
-      when: "'Nothing new added' not in sacctmgr_output.stdout and ansible_slack_token is defined"
-      delegate_to: localhost
   when: inventory_hostname == 'slurm'
