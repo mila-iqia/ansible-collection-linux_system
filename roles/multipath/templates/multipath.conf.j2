@@ -1,0 +1,31 @@
+# {{ ansible_managed }}
+defaults {
+  find_multipaths yes
+  user_friendly_names yes
+}
+
+blacklist {
+}
+
+devices {
+  device {
+    vendor "{{ multipath_vendor }}"
+    product "{{ multipath_product }}"
+    path_grouping_policy "group_by_prio"
+    path_checker "tur"
+    hardware_handler "1 alua"
+    prio "alua"
+    failback immediate
+    rr_weight "uniform"
+    path_selector "service-time 0"
+  }
+}
+
+multipaths {
+{% for volume in multipath_volumes %}
+  multipath {
+        wwid "{{ volume.wwid }}"
+        alias {{ volume.name }}
+  }
+{% endfor %}
+}

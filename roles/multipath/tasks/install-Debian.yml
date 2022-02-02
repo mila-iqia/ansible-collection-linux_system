@@ -1,0 +1,7 @@
+---
+- name: Install multipath packages
+  ansible.builtin.apt:
+    update_cache: true
+    name:
+      - multipath-tools
+      - multipath-tools-boot
