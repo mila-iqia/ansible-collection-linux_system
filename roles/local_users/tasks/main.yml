@@ -1,9 +1,16 @@
 ---
+# Configure user for automation
+- import_tasks: automation.yml
+  tags:
+    - local_automation
+    - local_users
+
 # Add local users
 - import_tasks: admins.yml
   tags:
     - local_admins
     - local_users
+
 - import_tasks: operators.yml
   tags:
     - local_operators

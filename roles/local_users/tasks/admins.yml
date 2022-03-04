@@ -41,12 +41,6 @@
   ignore_errors: True
   no_log: True
 
-- name: Set authorized key for ansible
-  authorized_key:
-    user: ansible
-    state: present
-    key: "{{ ansible_pub_key }}"
-
 - name: Ensure authorized_keys cache exists
   file:
     path: "{{ mila_authorized_keys_cache }}"
