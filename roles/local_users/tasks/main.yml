@@ -1,4 +1,8 @@
 ---
+- name: Ensure sudo is installed
+  ansible.builtin.package:
+    name: sudo
+
 # Configure user for automation
 - import_tasks: automation.yml
   tags:
