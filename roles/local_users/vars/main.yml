@@ -1,0 +1,6 @@
+---
+# Initialize list of admins defined in the inventory.
+_defined_admins: []
+
+# Initialize list of admins configured in /etc/passwd.
+_configured_admins: []

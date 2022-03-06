@@ -1,19 +1,18 @@
 ---
-
 - name: Create mila_admins group
-  group:
+  ansible.builtin.group:
     name: mila_admins
     state: present
     gid: "{{ mila_admins_gid }}"
 
 - name: Allow 'admins' group to have passwordless sudo
-  copy:
+  ansible.builtin.copy:
     content: '%mila_admins ALL=(ALL) NOPASSWD:ALL'
     dest: /etc/sudoers.d/mila_admins
     mode: 0440
 
 - name: Create Mila admins
-  user:
+  ansible.builtin.user:
     name: "{{ item.name }}-local"
     shell: /bin/bash
     create_home: yes
@@ -21,25 +20,17 @@
     uid: "{{ item.uid }}"
     password: "{{ item.password }}"
     update_password: always
-  with_items:
-    - "{{ mila_admins }}"
+  loop: "{{ mila_admins }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: Remove local keys
-  file:
+  ansible.builtin.file:
     path: "/home/{{ item.name }}-local/.ssh/authorized_keys"
     state: absent
-  with_items:
-    - "{{ mila_admins }}"
-
-- name: Remove gone admins
-  user:
-    name: "{{ item }}-local"
-    state: absent
-    remove: yes
-  with_items:
-    - "{{ admins_gone }}"
-  ignore_errors: True
-  no_log: True
+  loop: "{{ mila_admins }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: Set authorized key for ansible
   authorized_key:
@@ -48,16 +39,46 @@
     key: "{{ ansible_pub_key }}"
 
 - name: Ensure authorized_keys cache exists
-  file:
+  ansible.builtin.file:
     path: "{{ mila_authorized_keys_cache }}"
     state: directory
     mode: 0700
     owner: nobody
 
 - name: Copy authorized_key template
-  template:
+  ansible.builtin.template:
     src: sshd/mila_authorized_keys.j2
     dest: "{{ mila_authorized_keys_path }}"
     mode: 0755
     owner: root
     group: root
+
+# Find and delete removed admins
+#
+# 1) Build a list of admins defined in the inventory.
+# 2) Build a list of admins configured in /etc/passwd.
+# 3) Remove any user who is only in the second list.
+
+- name: Get defined list of admins
+  ansible.builtin.set_fact:
+    _defined_admins: "{{ mila_admins | map(attribute='name') | list }}"
+
+- name: Slurp /etc/passwd file
+  ansible.builtin.slurp:
+    src: /etc/passwd
+  register: _passwd_file
+
+- name: Get list of configured admins from /etc/passwd
+  ansible.builtin.set_fact:
+    _configured_admins: '{{ _configured_admins + [ item.split("-") | first ] }}'
+  loop: "{{ (_passwd_file['content'] | b64decode).splitlines() |
+     select('match','^[a-z0-9-.]+:x:[0-9]+:' + mila_admins_gid | string + ':') |
+     list }}"
+  no_log: True
+
+- name: Remove gone admins
+  ansible.builtin.user:
+    name: "{{ item }}-local"
+    state: absent
+    remove: yes
+  loop: "{{ _configured_admins | difference(_defined_admins) }}"
