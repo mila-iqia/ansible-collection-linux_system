@@ -1,31 +1,30 @@
 ---
+- name: Create primary operator group
+  group:
+    name: "{{ item.name }}-local"
+    state: present
+    gid: "{{ item.uid }}"
 
-  - name: Create primary operator group
-    group:
-      name: "{{ item.name }}-local"
-      state: present
-      gid: "{{ item.uid }}"
+# Restreindre les droits des opérateurs ici
+- name: Allow 'operators' group to have passwordless sudo
+  copy:
+    content: "{{ item.name }}-local ALL=(ALL) NOPASSWD:ALL"
+    dest: "/etc/sudoers.d/{{ item.name }}"
+    mode: 0440
 
-  # Restreindre les droits des opérateurs ici
-  - name: Allow 'operators' group to have passwordless sudo
-    copy:
-      content: "{{ item.name }}-local ALL=(ALL) NOPASSWD:ALL"
-      dest: "/etc/sudoers.d/{{ item.name }}"
-      mode: 0440
+- name: Create operator user
+  user:
+    name: "{{ item.name }}-local"
+    shell: /bin/bash
+    create_home: yes
+    group: mila_operators
+    groups:
+      - "{{ item.name }}-local"
+    uid: "{{ item.uid }}"
+    password: "{{ item.password }}"
+    update_password: always
 
-  - name: Create operator user
-    user:
-      name: "{{ item.name }}-local"
-      shell: /bin/bash
-      create_home: yes
-      group: "{{ item.name }}-local"
-      groups:
-        - mila_operators
-      uid: "{{ item.uid }}"
-      password: "{{ item.password }}"
-      update_password: always
-
-  - name: Remove local keys
-    file:
-      path: "/home/{{ item.name }}-local/.ssh/authorized_keys"
-      state: absent
+- name: Remove local keys
+  file:
+    path: "/home/{{ item.name }}-local/.ssh/authorized_keys"
+    state: absent

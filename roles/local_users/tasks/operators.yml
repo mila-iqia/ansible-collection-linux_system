@@ -1,39 +1,59 @@
 ---
-
 - name: Create mila_operators group
-  group:
+  ansible.builtin.group:
     name: mila_operators
     state: present
     gid: "{{ mila_operators_gid }}"
 
 - name: Add operator
-  include_tasks: create_operator.yml
-  with_items: "{{ mila_operators }}"
+  ansible.builtin.include_tasks: create_operator.yml
+  loop: "{{ mila_operators }}"
+  loop_control:
+    label: "{{ item.name }}"
   when: inventory_hostname in item.hosts
 
-- name: Remove gone operators groups
-  group:
-    name: "{{ item }}-local"
-    state: absent
-    remove: yes
-  with_items:
-    - "{{ operators_gone }}"
-  ignore_errors: True
+# Find and delete removed operators
+#
+# 1) Build a list of operators defined in the inventory.
+# 2) Build a list of operators configured in /etc/passwd.
+# 3) Remove any user who is only in the second list.
+
+- name: Get defined list of operators
+  ansible.builtin.set_fact:
+    _defined_operators: "{{ _defined_operators + [ item.name ] }}"
+  loop: "{{ mila_operators }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: inventory_hostname in item.hosts
+
+- name: Slurp /etc/passwd file
+  ansible.builtin.slurp:
+    src: /etc/passwd
+  register: _passwd_file
+
+- name: Get list of configured operators from /etc/passwd
+  ansible.builtin.set_fact:
+    _configured_operators: '{{ _configured_operators + [ item.split("-") | first ] }}'
+  loop: "{{ (_passwd_file['content'] | b64decode).splitlines() |
+     select('match','^[a-z0-9-.]+:x:[0-9]+:' + mila_operators_gid | string + ':') |
+     list }}"
   no_log: True
 
-- name: Remove gone operators usernames
-  user:
+- name: Remove gone operators
+  ansible.builtin.user:
     name: "{{ item }}-local"
     state: absent
     remove: yes
-  with_items:
-    - "{{ operators_gone }}"
-  ignore_errors: True
-  no_log: True
+  loop: "{{ _configured_operators | difference(_defined_operators) }}"
+
+- name: Remove gone operators groups
+  ansible.builtin.group:
+    name: "{{ item }}-local"
+    state: absent
+  loop: "{{ _configured_operators | difference(_defined_operators) }}"
 
 - name: Remove gone operators sudo
-  file:
+  ansible.builtin.file:
     path: "/etc/sudoers.d/{{ item }}"
     state: absent
-  with_items:
-    - "{{ operators_gone }}"
+  loop: "{{ _configured_operators | difference(_defined_operators) }}"
