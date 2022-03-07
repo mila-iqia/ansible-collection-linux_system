@@ -32,12 +32,6 @@
   loop_control:
     label: "{{ item.name }}"
 
-- name: Set authorized key for ansible
-  authorized_key:
-    user: ansible
-    state: present
-    key: "{{ ansible_pub_key }}"
-
 - name: Ensure authorized_keys cache exists
   ansible.builtin.file:
     path: "{{ mila_authorized_keys_cache }}"

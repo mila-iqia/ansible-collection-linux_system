@@ -1,0 +1,45 @@
+---
+- name: Create group ansible
+  ansible.builtin.group:
+    name: ansible
+    gid: 9999
+
+- name: Create user ansible
+  ansible.builtin.user:
+    name: ansible
+    uid: 9999
+    group: ansible
+    home: /var/lib/ansible
+    password: '*'
+    shell: /bin/bash
+
+- name: Create .ssh directory if it does not exist
+  ansible.builtin.file:
+    path: /var/lib/ansible/.ssh
+    state: directory
+    owner: ansible
+    group: ansible
+    mode: 0700
+
+- name: Set authorized key for ansible
+  ansible.posix.authorized_key:
+    user: ansible
+    state: present
+    key: "{{ ansible_pub_key }}"
+
+- name: Open access to user ansible
+  ansible.builtin.blockinfile:
+    path: /etc/security/access.conf
+    block: |
+      {% for ip in k8s_servers %}
+      + : ansible : {{ ip }}/32
+      {% endfor %}
+    insertbefore: '- : ALL : ALL'
+
+- name: Allow passwordless sudo for user ansible
+  ansible.builtin.copy:
+    content: 'ansible ALL=(ALL) NOPASSWD:ALL'
+    dest: /etc/sudoers.d/ansible
+    owner: root
+    group: root
+    mode: 0440
