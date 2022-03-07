@@ -4,3 +4,9 @@ _defined_admins: []
 
 # Initialize list of admins configured in /etc/passwd.
 _configured_admins: []
+
+# Initialize list of operators defined in the inventory.
+_defined_operators: []
+
+# Initialize list of operators configured in /etc/passwd.
+_configured_operators: []
