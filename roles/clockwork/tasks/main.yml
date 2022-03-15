@@ -1,0 +1,6 @@
+---
+- name: Install packages for clockwork machine
+  ansible.builtin.apt:
+    pkg:
+      - nginx
+      - podman
