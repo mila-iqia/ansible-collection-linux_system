@@ -1,26 +1,26 @@
 ---
 
 - name: Check if cgroup memory in kernel
-  shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "cgroup_enable=memory"
+  ansible.builtin.shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "cgroup_enable=memory"
   register: cgroup_memory
   ignore_errors: true
   failed_when: false
 
 - name: Enable cgroup memory
-  lineinfile: dest="/etc/default/grub" regexp='GRUB_CMDLINE_LINUX_DEFAULT="(.*)"' line='GRUB_CMDLINE_LINUX_DEFAULT="\1 cgroup_enable=memory"' backrefs=yes
+  ansible.builtin.lineinfile: dest="/etc/default/grub" regexp='GRUB_CMDLINE_LINUX_DEFAULT="(.*)"' line='GRUB_CMDLINE_LINUX_DEFAULT="\1 cgroup_enable=memory"' backrefs=yes  # noqa 204
   when: cgroup_memory.stdout == "0"
 
 - name: update-grub
-  shell: update-grub2
+  ansible.builtin.shell: update-grub2
   when: cgroup_memory.stdout == "0"
 
 - name: Check if cgroup v2 in kernel
-  shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "systemd.unified_cgroup_hierarchy"
+  ansible.builtin.shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "systemd.unified_cgroup_hierarchy"
   register: cgroup_v2
   ignore_errors: true
 
 - name: Enable cgroup memory
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "/etc/default/grub"
     regexp: 'GRUB_CMDLINE_LINUX_DEFAULT="(.*)"'
     line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 systemd.unified_cgroup_hierarchy"'
@@ -28,41 +28,96 @@
   when: cgroup_v2.stdout == "0"
 
 - name: update-grub
-  shell: update-grub2
+  ansible.builtin.shell: update-grub2
   when: cgroup_v2.stdout == "0"
 
 - name: Get Systemd version
-  shell: systemd --version | head -n1 | awk '{print $2}'
+  ansible.builtin.shell: systemd --version | head -n1 | awk '{print $2}'
   register: systemd_version
 
-- name: Install Systemd 240 compiled with GLIBC 2.27
-  command: >
-    dpkg -i \
-      /ai/packages/x86_64/debian/systemd240/systemd_240-6ubuntu5.8_amd64.deb \
-      /ai/packages/x86_64/debian/systemd240/systemd-sysv_240-6ubuntu5.8_amd64.deb \
-      /ai/packages/x86_64/debian/systemd240/libnss-systemd_240-6ubuntu5.8_amd64.deb \
-      /ai/packages/x86_64/debian/systemd240/libsystemd-dev_240-6ubuntu5.8_amd64.deb \
-      /ai/packages/x86_64/debian/systemd240/libsystemd0_240-6ubuntu5.8_amd64.deb \
-      /ai/packages/x86_64/debian/systemd240/libpam-systemd_240-6ubuntu5.8_amd64.deb
-  environment:
-    DEBIAN_FRONTEND: noninteractive
-  when: systemd_version.stdout != "240"
+  ####
+  # This task was used for legacy loginnodes (login[1-4]) but disabled since
+  # GEN-1939. We keep track of this as current loginnodes in production runs
+  # this particular systemd version.
+  ###
+  # - name: Install Systemd 240 compiled with GLIBC 2.27
+  # command: >
+  #   dpkg -i \
+  #     /ai/packages/x86_64/debian/systemd240/systemd_240-6ubuntu5.8_amd64.deb \
+  #     /ai/packages/x86_64/debian/systemd240/systemd-sysv_240-6ubuntu5.8_amd64.deb \
+  #     /ai/packages/x86_64/debian/systemd240/libnss-systemd_240-6ubuntu5.8_amd64.deb \
+  #     /ai/packages/x86_64/debian/systemd240/libsystemd-dev_240-6ubuntu5.8_amd64.deb \
+  #     /ai/packages/x86_64/debian/systemd240/libsystemd0_240-6ubuntu5.8_amd64.deb \
+  #     /ai/packages/x86_64/debian/systemd240/libpam-systemd_240-6ubuntu5.8_amd64.deb
+  # environment:
+  #   DEBIAN_FRONTEND: noninteractive
+  # when: systemd_version.stdout != "240"
+  ####
 
-- name: Create base directory
-  file:
-    path: /etc/systemd/system/user-.slice.d
-    state: directory
-    mode: 0755
+- name: Use pam_exec and custom bash script if systemd version is below 239
+  block:
+    # copy scripts with limits
+    - name: Copy script to apply limits
+      ansible.builtin.template:
+        src: etc/security/limits.sh.j2
+        dest: /etc/security/limits.sh
+        mode: 0755
+        owner: root
+        group: root
 
-- name: Copy default limit drop-in
-  copy:
-    src: login-limits.conf
-    dest: /etc/systemd/system/user-.slice.d/limits.conf
-    owner: root
-    group: root
-    mode: 0644
+    # Edit systemd default config
+    - name: Enable CPU Accounting
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/system.conf
+        regexp: 'DefaultCPUAccounting'
+        line: 'DefaultCPUAccounting=yes'
+
+    - name: Enable BlockIO Accounting
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/system.conf
+        regexp: 'DefaultBlockIOAccounting'
+        line: 'DefaultBlockIOAccounting=yes'
+
+    - name: Enable Memory Accounting
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/system.conf
+        regexp: 'DefaultMemoryAccounting'
+        line: 'DefaultMemoryAccounting=yes'
+
+    - name: Enable Tasks Accounting
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/system.conf
+        regexp: 'DefaultTasksAccounting'
+        line: 'DefaultTasksAccounting=yes'
+
+    # Edit pam.d/common-session file
+    - name: Enable pam_exec with custom script to set cgroups limits
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/common-session
+        regexp: 'pam_exec'
+        line: 'session required        pam_exec.so    type=open_session /etc/security/limits.sh'
+
+  when: systemd_version.stdout | int < 239
+
+- name: Use user-.slice.d drop-in if systemd version is 239 and above
+  block:
+    - name: Create base directory
+      ansible.builtin.file:
+        path: /etc/systemd/system/user-.slice.d
+        state: directory
+        mode: 0755
+
+    - name: Copy default limit drop-in
+      ansible.builtin.copy:
+        src: login-limits.conf
+        dest: /etc/systemd/system/user-.slice.d/limits.conf
+        owner: root
+        group: root
+        mode: 0644
+
+  when: systemd_version.stdout | int >= 239
 
 - name: Check if cgroups v2 is enabled
-  stat:
+  ansible.builtin.stat:
     path: /sys/fs/cgroup/user.slice
   register: cgroups_details

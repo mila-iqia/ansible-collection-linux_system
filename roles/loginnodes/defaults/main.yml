@@ -1,0 +1,4 @@
+---
+cgroups_properties:
+  - name: TasksMax
+    value: '1000'
