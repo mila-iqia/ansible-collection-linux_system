@@ -35,6 +35,7 @@
 
     - name: Add SLURM Accounts
       ansible.builtin.command: "/opt/slurm/bin/sacctmgr -i load file=/tmp/LDAP-saccounts clean"
+      changed_when: true
       register: sacctmgr_output
 
     - name: Display output of sacctmgr
