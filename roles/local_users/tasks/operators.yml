@@ -37,7 +37,7 @@
   loop: "{{ (_passwd_file['content'] | b64decode).splitlines() |
      select('match','^[a-z0-9-.]+:x:[0-9]+:' + mila_operators_gid | string + ':') |
      list }}"
-  no_log: True
+  no_log: true
 
 - name: Remove gone operators
   ansible.builtin.user:
