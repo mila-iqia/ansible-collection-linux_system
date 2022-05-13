@@ -1,23 +1,23 @@
 ---
 - name: Create Certs Directory
-  file:
+  ansible.builtin.file:
     path: /etc/sssd/certs/
     state: directory
     mode: 0700
 
 - name: Clone Certs
-  git:
+  ansible.builtin.git:
     repo: "{{ gsuite_certs_repo }}"
     dest: /tmp/gsuite_certs/
     clone: yes
   become: false
   tags:
-  - skip_ansible_lint
+    - skip_ansible_lint
   delegate_to: localhost
   run_once: true
 
 - name: Send Certs
-  copy:
+  ansible.builtin.copy:
     src: /tmp/gsuite_certs/
     dest: /etc/sssd/certs/
     owner: root
@@ -25,21 +25,21 @@
     mode: 0600
 
 - name: Install sssd
-  package:
-   name:
+  ansible.builtin.package:
+    name:
       - sssd
       - sssd-common
 
 - name: Install sssd
-  package:
-   name:
+  ansible.builtin.package:
+    name:
       - sssd-tools
       - libnss-sss
       - libpam-sss
   when: ansible_facts['os_family'] == 'Debian'
 
 - name: Generate /etc/sssd.conf
-  template:
+  ansible.builtin.template:
     src: sssd.conf.j2
     dest: /etc/sssd/sssd.conf
     owner: root
@@ -48,7 +48,7 @@
   notify: restart sssd
 
 - name: restart sssd
-  systemd:
+  ansible.builtin.systemd:
     name: sssd.service
     state: started
     enabled: yes

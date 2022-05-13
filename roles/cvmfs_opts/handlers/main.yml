@@ -1,6 +1,6 @@
 ---
 - name: reload autofs
-  systemd:
+  ansible.builtin.systemd:
     name: autofs.service
     state: reloaded
     enabled: yes

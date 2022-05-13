@@ -51,7 +51,7 @@
   notify: restart fail2ban
 
 - name: Force fail2ban Restart
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Check fail2ban is started
   ansible.builtin.systemd:
