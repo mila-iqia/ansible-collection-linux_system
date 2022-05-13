@@ -1,5 +1,4 @@
 ---
-
 - name: Check if cgroup memory in kernel
   ansible.builtin.shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "cgroup_enable=memory"
   register: cgroup_memory
@@ -11,7 +10,7 @@
   when: cgroup_memory.stdout == "0"
 
 - name: update-grub
-  ansible.builtin.shell: update-grub2
+  ansible.builtin.command: update-grub2
   when: cgroup_memory.stdout == "0"
 
 - name: Check if cgroup v2 in kernel
@@ -28,7 +27,7 @@
   when: cgroup_v2.stdout == "0"
 
 - name: update-grub
-  ansible.builtin.shell: update-grub2
+  ansible.builtin.command: update-grub2
   when: cgroup_v2.stdout == "0"
 
 - name: Get Systemd version
