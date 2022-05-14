@@ -1,11 +1,9 @@
 ---
-
 - name: disable sssd
   ansible.builtin.systemd:
     name: sssd.service
     state: stopped
     enabled: no
-  ignore_errors: true
 
 - name: Send Groups
   ansible.builtin.copy:
