@@ -1,12 +1,15 @@
 ---
 - name: Check if cgroup memory in kernel
-  ansible.builtin.shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "cgroup_enable=memory"
+  ansible.builtin.command: grep -c '^GRUB_CMDLINE_LINUX_DEFAULT=.*cgroup_enable=memory' /etc/default/grub
+  changed_when: false
   register: cgroup_memory
-  ignore_errors: true
-  failed_when: false
 
 - name: Enable cgroup memory
-  ansible.builtin.lineinfile: dest="/etc/default/grub" regexp='GRUB_CMDLINE_LINUX_DEFAULT="(.*)"' line='GRUB_CMDLINE_LINUX_DEFAULT="\1 cgroup_enable=memory"' backrefs=yes  # noqa 204
+  ansible.builtin.lineinfile:
+    path: "/etc/default/grub"
+    regexp: 'GRUB_CMDLINE_LINUX_DEFAULT="(.*)"'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 cgroup_enable=memory"'
+    backrefs: yes
   when: cgroup_memory.stdout == "0"
 
 - name: update-grub
@@ -14,9 +17,9 @@
   when: cgroup_memory.stdout == "0"
 
 - name: Check if cgroup v2 in kernel
-  ansible.builtin.shell: grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | grep -c "systemd.unified_cgroup_hierarchy"
+  ansible.builtin.command: grep -c '^GRUB_CMDLINE_LINUX_DEFAULT=.*systemd.unified_cgroup_hierarchy' /etc/default/grub
+  changed_when: false
   register: cgroup_v2
-  ignore_errors: true
 
 - name: Enable cgroup memory
   ansible.builtin.lineinfile:
