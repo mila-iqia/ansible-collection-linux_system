@@ -30,28 +30,32 @@
   ansible.builtin.command: update-grub2
   when: cgroup_v2.stdout == "0"
 
-- name: Get Systemd version
-  ansible.builtin.shell: systemd --version | head -n1 | awk '{print $2}'
-  register: systemd_version
+- name: Get packages facts
+  ansible.builtin.package_facts:
+    manager: auto
 
-  ####
-  # This task was used for legacy loginnodes (login[1-4]) but disabled since
-  # GEN-1939. We keep track of this as current loginnodes in production runs
-  # this particular systemd version.
-  ###
-  # - name: Install Systemd 240 compiled with GLIBC 2.27
-  # command: >
-  #   dpkg -i \
-  #     /ai/packages/x86_64/debian/systemd240/systemd_240-6ubuntu5.8_amd64.deb \
-  #     /ai/packages/x86_64/debian/systemd240/systemd-sysv_240-6ubuntu5.8_amd64.deb \
-  #     /ai/packages/x86_64/debian/systemd240/libnss-systemd_240-6ubuntu5.8_amd64.deb \
-  #     /ai/packages/x86_64/debian/systemd240/libsystemd-dev_240-6ubuntu5.8_amd64.deb \
-  #     /ai/packages/x86_64/debian/systemd240/libsystemd0_240-6ubuntu5.8_amd64.deb \
-  #     /ai/packages/x86_64/debian/systemd240/libpam-systemd_240-6ubuntu5.8_amd64.deb
-  # environment:
-  #   DEBIAN_FRONTEND: noninteractive
-  # when: systemd_version.stdout != "240"
-  ####
+- name: Set fact Systemd version
+  ansible.builtin.set_fact:
+    systemd_version: "{{ ansible_facts.packages['systemd'] | map(attribute='version') | first }}"
+
+####
+# This task was used for legacy loginnodes (login[1-4]) but disabled since
+# GEN-1939. We keep track of this as current loginnodes in production runs
+# this particular systemd version.
+###
+# - name: Install Systemd 240 compiled with GLIBC 2.27
+# command: >
+#   dpkg -i \
+#     /ai/packages/x86_64/debian/systemd240/systemd_240-6ubuntu5.8_amd64.deb \
+#     /ai/packages/x86_64/debian/systemd240/systemd-sysv_240-6ubuntu5.8_amd64.deb \
+#     /ai/packages/x86_64/debian/systemd240/libnss-systemd_240-6ubuntu5.8_amd64.deb \
+#     /ai/packages/x86_64/debian/systemd240/libsystemd-dev_240-6ubuntu5.8_amd64.deb \
+#     /ai/packages/x86_64/debian/systemd240/libsystemd0_240-6ubuntu5.8_amd64.deb \
+#     /ai/packages/x86_64/debian/systemd240/libpam-systemd_240-6ubuntu5.8_amd64.deb
+# environment:
+#   DEBIAN_FRONTEND: noninteractive
+# when: systemd_version[:3] != "240"
+####
 
 - name: Use pam_exec and custom bash script if systemd version is below 239
   block:
@@ -96,7 +100,7 @@
         regexp: 'pam_exec'
         line: 'session required        pam_exec.so    type=open_session /etc/security/limits.sh'
 
-  when: systemd_version.stdout | int < 239
+  when: systemd_version[:3] | int < 239
 
 - name: Use user-.slice.d drop-in if systemd version is 239 and above
   block:
@@ -114,7 +118,7 @@
         group: root
         mode: 0644
 
-  when: systemd_version.stdout | int >= 239
+  when: systemd_version[:3] | int >= 239
 
 - name: Check if cgroups v2 is enabled
   ansible.builtin.stat:
