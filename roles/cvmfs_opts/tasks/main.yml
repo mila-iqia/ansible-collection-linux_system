@@ -7,6 +7,9 @@
       ansible.builtin.template:
         src: cvmfs_config_repo.local.j2
         dest: /etc/cvmfs/config.d/{{ cvmfs_config_repo.repository.repository }}.local
+        owner: root
+        group: root
+        mode: 0644
 
     - name: Set env for Variant Symlinks
       ansible.builtin.copy:

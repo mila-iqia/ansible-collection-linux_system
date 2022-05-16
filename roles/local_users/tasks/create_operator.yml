@@ -1,19 +1,19 @@
 ---
 - name: Create primary operator group
-  group:
+  ansible.builtin.group:
     name: "{{ item.name }}-local"
     state: present
     gid: "{{ item.uid }}"
 
 # Restreindre les droits des opérateurs ici
 - name: Allow 'operators' group to have passwordless sudo
-  copy:
+  ansible.builtin.copy:
     content: "{{ item.name }}-local ALL=(ALL) NOPASSWD:ALL"
     dest: "/etc/sudoers.d/{{ item.name }}"
     mode: 0440
 
 - name: Create operator user
-  user:
+  ansible.builtin.user:
     name: "{{ item.name }}-local"
     shell: /bin/bash
     create_home: yes
@@ -25,6 +25,6 @@
     update_password: always
 
 - name: Remove local keys
-  file:
+  ansible.builtin.file:
     path: "/home/{{ item.name }}-local/.ssh/authorized_keys"
     state: absent

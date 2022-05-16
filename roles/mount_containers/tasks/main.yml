@@ -10,6 +10,6 @@
     opts: "ro,{{ nfs_default_opts }}"
 
 - name: Create containers directory
-  file:
+  ansible.builtin.file:
     path: /network/containers
     state: absent

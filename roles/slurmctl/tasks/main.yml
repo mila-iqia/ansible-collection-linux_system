@@ -1,14 +1,12 @@
 ---
-
 - name: disable sssd
-  systemd:
+  ansible.builtin.systemd:
     name: sssd.service
     state: stopped
     enabled: no
-  ignore_errors: true
 
 - name: Send Groups
-  copy:
+  ansible.builtin.copy:
     src: /tmp/slurmdb/LDAP-group
     dest: /etc/group
     owner: root
@@ -16,7 +14,7 @@
     mode: 0644
 
 - name: Send Password
-  copy:
+  ansible.builtin.copy:
     src: /tmp/slurmdb/LDAP-passwd
     dest: /etc/passwd
     owner: root
@@ -26,7 +24,7 @@
 - name: Update sacctmgr
   block:
     - name: Send SLURM Accounts
-      copy:
+      ansible.builtin.copy:
         src: /tmp/slurmdb/LDAP-saccounts
         dest: /tmp/LDAP-saccounts
         owner: root
@@ -34,8 +32,10 @@
         mode: 0644
 
     - name: Add SLURM Accounts
-      command: "/opt/slurm/bin/sacctmgr -i load file=/tmp/LDAP-saccounts clean"
+      ansible.builtin.command: "/opt/slurm/bin/sacctmgr -i load file=/tmp/LDAP-saccounts clean"
+      changed_when: true
       register: sacctmgr_output
 
-    - debug: msg="{{ sacctmgr_output.stdout }}"
+    - name: Display output of sacctmgr
+      ansible.builtin.debug: msg="{{ sacctmgr_output.stdout }}"
   when: inventory_hostname == 'slurm'

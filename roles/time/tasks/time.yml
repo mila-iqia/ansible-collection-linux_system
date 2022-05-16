@@ -5,19 +5,19 @@
     name: America/Toronto
 
 - name: Ensure chrony packages are installed.
-  package:
+  ansible.builtin.package:
     name: chrony
     state: present
 
 - name: Generate chrony.conf file
-  template:
+  ansible.builtin.template:
     src: chrony.conf.j2
     dest: "{{ chrony_conf[ansible_facts['os_family']] }}"
     mode: 0644
   notify: restart chrony
 
 - name: start chrony
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ chrony_service[ansible_facts['os_family']] }}"
     state: started
     enabled: yes
