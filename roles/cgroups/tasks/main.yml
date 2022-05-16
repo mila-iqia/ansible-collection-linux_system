@@ -3,6 +3,7 @@
   ansible.builtin.command: grep -c '^GRUB_CMDLINE_LINUX_DEFAULT=.*cgroup_enable=memory' /etc/default/grub
   changed_when: false
   register: cgroup_memory
+  failed_when: "cgroup_memory.rc > 1"
 
 - name: Enable cgroup memory
   ansible.builtin.lineinfile:
@@ -20,6 +21,7 @@
   ansible.builtin.command: grep -c '^GRUB_CMDLINE_LINUX_DEFAULT=.*systemd.unified_cgroup_hierarchy' /etc/default/grub
   changed_when: false
   register: cgroup_v2
+  failed_when: "cgroup_v2.rc > 1"
 
 - name: Enable cgroup memory
   ansible.builtin.lineinfile:
