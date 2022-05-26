@@ -1,29 +1,4 @@
 ---
-- name: Create Certs Directory
-  ansible.builtin.file:
-    path: /etc/sssd/certs/
-    state: directory
-    mode: 0700
-
-- name: Clone Certs
-  ansible.builtin.git:
-    repo: "{{ gsuite_certs_repo }}"
-    dest: /tmp/gsuite_certs/
-    clone: yes
-  become: false
-  tags:
-    - skip_ansible_lint
-  delegate_to: localhost
-  run_once: true
-
-- name: Send Certs
-  ansible.builtin.copy:
-    src: /tmp/gsuite_certs/
-    dest: /etc/sssd/certs/
-    owner: root
-    group: root
-    mode: 0600
-
 - name: Install sssd
   ansible.builtin.package:
     name:
