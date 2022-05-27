@@ -1,0 +1,10 @@
+[sshd]
+enabled = false
+
+[nginx-ssh]
+enabled  = true
+filter   = nginx-ssh-filter
+logpath  = /var/log/nginx/gitlab-ssh-access.log
+bantime  = {{ fail2ban_bantime }}
+findtime  = {{ fail2ban_findtime }}
+maxretry = {{ fail2ban_maxretry }}
