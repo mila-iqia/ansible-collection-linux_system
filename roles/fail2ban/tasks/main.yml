@@ -1,59 +1,8 @@
 ---
+- name: Configure fail2ban for loginnodes
+  import_tasks: loginnodes.yml
+  when: "'loginnodes' in group_names"
 
-- name: Install fail2ban service
-  ansible.builtin.apt:
-    name:
-      - fail2ban
-
-- name: Jail defaults
-  ansible.builtin.template:
-    src: fail2ban/defaults-debian.conf.j2
-    dest: /etc/fail2ban/jail.d/defaults-debian.conf
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart fail2ban
-
-- name: Sendmail to admins
-  ansible.builtin.template:
-    src: fail2ban/sendmail.conf.j2
-    dest: /etc/fail2ban/jail.d/sendmail.conf
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart fail2ban
-
-- name: Slack notifications
-  ansible.builtin.template:
-    src: fail2ban/slack-notify.conf.j2
-    dest: /etc/fail2ban/action.d/slack-notify.conf
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart fail2ban
-
-- name: Find username script
-  ansible.builtin.template:
-    src: fail2ban/username.sh.j2
-    dest: "{{ fail2ban_find_username_path }}"
-    owner: root
-    group: root
-    mode: 0755
-  notify: restart fail2ban
-
-- name: Jail whitelist
-  ansible.builtin.template:
-    src: fail2ban/ignore.conf.j2
-    dest: /etc/fail2ban/jail.d/ignore.conf
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart fail2ban
-
-- name: Force fail2ban Restart
-  ansible.builtin.meta: flush_handlers
-
-- name: Check fail2ban is started
-  ansible.builtin.systemd:
-    name: fail2ban.service
-    state: started
+- name: Configure fail2ban for webservers
+  import_tasks: webservers.yml
+  when: "'webservers' in group_names"
