@@ -11,14 +11,17 @@
 - name: Create File Systems
   community.general.filesystem:
     fstype: "{{ item.fstype | default('ext4') }}"
-    dev: "{{ item.device }}"
+    dev: "{{ item.source }}"
     state: present
   loop: "{{ mount_volumes }}"
+  # Create file system only when source starts with '/dev/'
+  when: item.source[:5] == '/dev/'
 
 - name: Mount File Systems
   ansible.posix.mount:
     path: "{{ item.path }}"
-    src: "{{ item.device }}"
+    src: "{{ item.source }}"
     fstype: "{{ item.fstype | default('ext4') }}"
-    state: mounted
+    opts: "{{ item.opts | default(omit) }}"
+    state: "{{ item.state | default('mounted') }}"
   loop: "{{ mount_volumes }}"
