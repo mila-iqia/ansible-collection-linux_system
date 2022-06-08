@@ -1,8 +1,54 @@
 ---
-- name: Configure fail2ban for loginnodes
-  import_tasks: loginnodes.yml
-  when: "'loginnodes' in group_names"
+- name: Install fail2ban service
+  ansible.builtin.apt:
+    name:
+      - fail2ban
 
-- name: Configure fail2ban for webservers
-  import_tasks: webservers.yml
-  when: "'webservers' in group_names"
+- name: Copy filter.d .conf files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "/etc/fail2ban/filter.d/{{ item.dest | default(item.src) }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart fail2ban
+  loop: "{{ fail2ban_filter_d_conf_files | default([]) }}"
+
+- name: Copy jail.d .conf templates
+  ansible.builtin.template:
+    src: "{{ item.src }}.j2"
+    dest: "/etc/fail2ban/jail.d/{{ item.dest | default(item.src) }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart fail2ban
+  loop: "{{ fail2ban_jail_d_conf_templates | default([]) }}"
+
+- name: Copy action.d .conf templates
+  ansible.builtin.template:
+    src: "{{ item.src }}.j2"
+    dest: "/etc/fail2ban/action.d/{{ item.dest | default(item.src) }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart fail2ban
+  loop: "{{ fail2ban_action_d_conf_templates | default([]) }}"
+
+- name: Copy action.d .sh templates
+  ansible.builtin.template:
+    src: "{{ item.src }}.j2"
+    dest: "/etc/fail2ban/action.d/{{ item.dest | default(item.src) }}"
+    owner: root
+    group: root
+    mode: 0755
+  notify: restart fail2ban
+  loop: "{{ fail2ban_action_d_sh_templates | default([]) }}"
+
+- name: Force fail2ban restart
+  ansible.builtin.meta: flush_handlers
+
+- name: Check fail2ban is started
+  ansible.builtin.systemd:
+    name: fail2ban.service
+    state: started
+    enabled: true
