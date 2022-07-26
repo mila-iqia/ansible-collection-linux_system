@@ -27,27 +27,3 @@
     that:
       - multipath_volumes is defined
     fail_msg: "The list of volumes must be defined in multipath_volumes"
-
-- name: Ensure mountpoints exist
-  ansible.builtin.file:
-    path: /{{ item.name }}
-    owner: "{{ multipath_volumes_owner }}"
-    group: "{{ multipath_volumes_group }}"
-    mode: '0770'
-    state: directory
-  loop: "{{ multipath_volumes }}"
-
-- name: Create File Systems
-  community.general.filesystem:
-    fstype: "{{ item.fstype | default('ext4') }}"
-    dev: /dev/mapper/{{ item.name }}
-    state: present
-  loop: "{{ multipath_volumes }}"
-
-- name: Mount File Systems
-  ansible.posix.mount:
-    path: /{{ item.name }}
-    src: /dev/mapper/{{ item.name }}
-    fstype: "{{ item.fstype | default('ext4') }}"
-    state: mounted
-  loop: "{{ multipath_volumes }}"
