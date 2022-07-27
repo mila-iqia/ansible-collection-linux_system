@@ -10,3 +10,9 @@ _defined_operators: []
 
 # Initialize list of operators configured in /etc/passwd.
 _configured_operators: []
+
+# Initialize list of service accounts defined in the inventory.
+_defined_service_accounts: []
+
+# Initialize list of service_accounts configured in /etc/passwd.
+_configured_service_accounts: []

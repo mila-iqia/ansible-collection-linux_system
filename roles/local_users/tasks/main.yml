@@ -21,3 +21,8 @@
   tags:
     - local_operators
     - local_users
+
+- import_tasks: service_accounts.yml
+  tags:
+    - local_service_accounts
+    - local_users

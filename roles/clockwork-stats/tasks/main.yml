@@ -3,8 +3,8 @@
   ansible.builtin.copy:
     src: generate_clusterstats_cache.sh
     dest: /home/mila-automation-local/generate_clusterstats_cache.sh
-    owner: mila-automation-local
-    group: mila-automation-local
+    owner: mila-automation
+    group: mila-automation
     mode: 0700
 
 - name: stats script crontab
@@ -12,4 +12,4 @@
     name: "Generate Cluster Stats Cache"
     minute: "*/1"
     job: "/home/mila-automation-local/generate_clusterstats_cache.sh"
-    user: mila-automation-local
+    user: mila-automation
