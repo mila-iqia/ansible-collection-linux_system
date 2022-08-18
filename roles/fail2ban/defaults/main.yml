@@ -1,0 +1,9 @@
+---
+fail2ban_admin_mail: admin@domain.tld
+fail2ban_bantime: 1h
+fail2ban_findtime: 5m
+fail2ban_maxretry: 10
+fail2ban_find_username_path: /etc/fail2ban/action.d/username.sh
+
+# Slack webhook
+# fail2ban_slack_webhook: https://hooks.slack.com/services/CHANGEME

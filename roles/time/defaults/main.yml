@@ -1,0 +1,10 @@
+---
+# NTP
+chrony_service:
+  Debian: chrony
+  RedHat: chronyd
+chrony_conf:
+  Debian: /etc/chrony/chrony.conf
+  RedHat: /etc/chrony.conf
+
+ntp_server: 0.pool.ntp.org
