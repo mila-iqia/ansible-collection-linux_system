@@ -68,7 +68,7 @@
 
 - name: lmod bash
   ansible.builtin.file:
-    src: /cvmfs/ai.mila.quebec/apps/{{ ARCH }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/profile
+    src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/profile
     dest: /etc/profile.d/z00_lmod.sh
     state: link
     force: yes
@@ -76,7 +76,7 @@
 
 - name: lmod bourne
   ansible.builtin.file:
-    src: /cvmfs/ai.mila.quebec/apps/{{ ARCH }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/cshrc
+    src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/cshrc
     dest: /etc/profile.d/z00_lmod.csh
     state: link
     force: yes
@@ -84,7 +84,7 @@
 
 - name: lmod fish
   ansible.builtin.file:
-    src: /cvmfs/ai.mila.quebec/apps/{{ ARCH }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/profile.fish
+    src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/profile.fish
     dest: /etc/fish/conf.d/z00_lmod.fish
     state: link
     force: yes
@@ -113,14 +113,14 @@
 
     - name: lmod bash
       ansible.builtin.file:
-        src: /cvmfs/ai.mila.quebec/apps/{{ ARCH }}/debian/lmod/lmod/init/profile
+        src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/debian/lmod/lmod/init/profile
         dest: /etc/profile.d/z00_lmod.sh
         state: link
         force: yes
 
     - name: lmod bourne
       ansible.builtin.file:
-        src: /cvmfs/ai.mila.quebec/apps/{{ ARCH }}/debian/lmod/lmod/init/cshrc
+        src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/debian/lmod/lmod/init/cshrc
         dest: /etc/profile.d/z00_lmod.csh
         state: link
         force: yes
