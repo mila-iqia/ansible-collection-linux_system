@@ -13,7 +13,7 @@
     backrefs: yes
   when: cgroup_memory.stdout == "0"
 
-- name: update-grub
+- name: Update-grub
   ansible.builtin.command: update-grub2
   when: cgroup_memory.stdout == "0"
 
@@ -31,7 +31,7 @@
     backrefs: yes
   when: cgroup_v2.stdout == "0"
 
-- name: update-grub
+- name: Update-grub
   ansible.builtin.command: update-grub2
   when: cgroup_v2.stdout == "0"
 

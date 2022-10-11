@@ -66,7 +66,7 @@
     state: link
   when: ansible_facts['os_family'] == 'Debian' and posix_c_result.stat.exists
 
-- name: lmod bash
+- name: Lmod bash
   ansible.builtin.file:
     src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/profile
     dest: /etc/profile.d/z00_lmod.sh
@@ -74,7 +74,7 @@
     force: yes
   when: ansible_facts['os_family'] != 'RedHat' or ansible_facts['distribution_major_version'] != "7"
 
-- name: lmod bourne
+- name: Lmod bourne
   ansible.builtin.file:
     src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/cshrc
     dest: /etc/profile.d/z00_lmod.csh
@@ -82,7 +82,7 @@
     force: yes
   when: ansible_facts['os_family'] != 'RedHat' or ansible_facts['distribution_major_version'] != "7"
 
-- name: lmod fish
+- name: Lmod fish
   ansible.builtin.file:
     src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/profile.fish
     dest: /etc/fish/conf.d/z00_lmod.fish
@@ -111,14 +111,14 @@
         dest: /usr/lib/lua/5.1
         state: link
 
-    - name: lmod bash
+    - name: Lmod bash
       ansible.builtin.file:
         src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/debian/lmod/lmod/init/profile
         dest: /etc/profile.d/z00_lmod.sh
         state: link
         force: yes
 
-    - name: lmod bourne
+    - name: Lmod bourne
       ansible.builtin.file:
         src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/debian/lmod/lmod/init/cshrc
         dest: /etc/profile.d/z00_lmod.csh

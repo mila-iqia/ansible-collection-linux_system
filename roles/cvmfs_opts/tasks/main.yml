@@ -9,7 +9,7 @@
     mode: 0644
   when: cvmfs_config_repo is defined and cvmfs_config_repo_supported
   notify:
-    - reload autofs
+    - Reload autofs
 
 - name: Additional configs for CernVM-FS repositories
   ansible.builtin.template:
@@ -23,4 +23,4 @@
     label: "/etc/cvmfs/config.d/{{ item.repository }}.local"
   when: item.client_configd is defined
   notify:
-    - reload autofs
+    - Reload autofs

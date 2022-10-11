@@ -1,5 +1,5 @@
 ---
-- name: disable sssd
+- name: Disable sssd
   ansible.builtin.systemd:
     name: sssd.service
     state: stopped
