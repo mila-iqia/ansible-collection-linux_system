@@ -1,7 +1,6 @@
 ---
-
 - name: Set timezone to America/Toronto
-  timezone:
+  community.general.timezone:
     name: America/Toronto
 
 - name: Ensure chrony packages are installed.
