@@ -22,6 +22,7 @@
     mode: 0644
 
 - name: Update sacctmgr
+  when: inventory_hostname == 'slurm'
   block:
     - name: Send SLURM Accounts
       ansible.builtin.copy:
@@ -39,4 +40,3 @@
     - name: Display output of sacctmgr
       ansible.builtin.debug:
         msg: "{{ sacctmgr_output.stdout }}"
-  when: inventory_hostname == 'slurm'

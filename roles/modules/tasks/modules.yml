@@ -92,6 +92,10 @@
 
 # Trick for rhel7 backward compatibility for old services which will use debian lua5.1
 - name: Redhat 7 uses old debian module
+  when:
+    - ansible_facts['os_family'] == 'RedHat'
+    - ansible_facts['distribution_major_version'] == "7"
+    - ansible_architecture == "x86_64"
   block:
 
     - name: Install lua RedHat
@@ -124,8 +128,3 @@
         dest: /etc/profile.d/z00_lmod.csh
         state: link
         force: yes
-
-  when:
-    - ansible_facts['os_family'] == 'RedHat'
-    - ansible_facts['distribution_major_version'] == "7"
-    - ansible_architecture == "x86_64"
