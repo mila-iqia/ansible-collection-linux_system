@@ -37,5 +37,6 @@
       register: sacctmgr_output
 
     - name: Display output of sacctmgr
-      ansible.builtin.debug: msg="{{ sacctmgr_output.stdout }}"
+      ansible.builtin.debug:
+        msg: "{{ sacctmgr_output.stdout }}"
   when: inventory_hostname == 'slurm'
