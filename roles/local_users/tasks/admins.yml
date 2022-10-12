@@ -64,9 +64,9 @@
 
 - name: Get list of configured admins from /etc/passwd
   ansible.builtin.set_fact:
-    _configured_admins: '{{ _configured_admins + [ item.split("-") | first ] }}'
+    _configured_admins: '{{ _configured_admins + [item.split("-") | first] }}'
   loop: "{{ (_passwd_file['content'] | b64decode).splitlines() |
-     select('match','^[a-z0-9-.]+:x:[0-9]+:' + mila_admins_gid | string + ':') |
+     select('match', '^[a-z0-9-.]+:x:[0-9]+:' + mila_admins_gid | string + ':') |
      list }}"
   no_log: true
 
