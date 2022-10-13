@@ -11,7 +11,7 @@
     owner: root
     group: root
     mode: 0644
-  notify: restart fail2ban
+  notify: Restart fail2ban
   loop: "{{ fail2ban_filter_d_conf_files | default([]) }}"
 
 - name: Copy jail.d .conf templates
@@ -21,7 +21,7 @@
     owner: root
     group: root
     mode: 0644
-  notify: restart fail2ban
+  notify: Restart fail2ban
   loop: "{{ fail2ban_jail_d_conf_templates | default([]) }}"
 
 - name: Copy action.d .conf templates
@@ -31,7 +31,7 @@
     owner: root
     group: root
     mode: 0644
-  notify: restart fail2ban
+  notify: Restart fail2ban
   loop: "{{ fail2ban_action_d_conf_templates | default([]) }}"
 
 - name: Copy action.d .sh templates
@@ -41,7 +41,7 @@
     owner: root
     group: root
     mode: 0755
-  notify: restart fail2ban
+  notify: Restart fail2ban
   loop: "{{ fail2ban_action_d_sh_templates | default([]) }}"
 
 - name: Force fail2ban restart

@@ -1,5 +1,5 @@
 ---
-- name: disable sssd
+- name: Disable sssd
   ansible.builtin.systemd:
     name: sssd.service
     state: stopped
@@ -22,6 +22,7 @@
     mode: 0644
 
 - name: Update sacctmgr
+  when: inventory_hostname == 'slurm'
   block:
     - name: Send SLURM Accounts
       ansible.builtin.copy:
@@ -37,5 +38,5 @@
       register: sacctmgr_output
 
     - name: Display output of sacctmgr
-      ansible.builtin.debug: msg="{{ sacctmgr_output.stdout }}"
-  when: inventory_hostname == 'slurm'
+      ansible.builtin.debug:
+        msg: "{{ sacctmgr_output.stdout }}"
