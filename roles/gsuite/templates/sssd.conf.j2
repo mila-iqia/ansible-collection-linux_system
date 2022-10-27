@@ -35,3 +35,7 @@ ldap_purge_cache_timeout = 0
 
 # Do not download full list for getent group
 ignore_group_members = true
+
+{% if gsuite_sssd_enumerate is defined %}
+enumerate = {{ gsuite_sssd_enumerate }}
+{% endif%}
