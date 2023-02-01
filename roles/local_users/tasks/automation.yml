@@ -31,8 +31,8 @@
   ansible.builtin.blockinfile:
     path: /etc/security/access.conf
     block: |
-      {% for ip in k8s_servers %}
-      + : ansible : {{ ip }}/32
+      {% for gl_runner_ip in security_gitlab_runners %}
+      + : ansible : {{ gl_runner_ip }}/32
       {% endfor %}
     insertbefore: '- : ALL : ALL'
 
