@@ -15,7 +15,7 @@
 - name: Create operator user
   ansible.builtin.user:
     name: "{{ item.name }}-local"
-    shell: /bin/bash
+    shell: "{{ item.shell | default('/bin/bash') }}"
     create_home: yes
     group: mila_operators
     groups:
