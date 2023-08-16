@@ -8,4 +8,4 @@ if curl -sL "$GDOCS" --connect-timeout 10 --max-time 10 > "$GKEY" 2>/dev/null; t
   cat "$GKEY" > "$CACHE"
   rm -f "$GKEY"
 fi
-cat "$CACHE" | grep -A2 "$USER" | tail -n2
+grep -A2 "^$USER" "$CACHE" | tail -n2
