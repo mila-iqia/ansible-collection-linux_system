@@ -1,0 +1,13 @@
+---
+- name: Install msmtp
+  ansible.builtin.package:
+    name:
+      - msmtp
+
+- name: Generate /etc/msmtprc
+  ansible.builtin.template:
+    src: msmtprc.j2
+    dest: /etc/msmtprc
+    owner: root
+    group: root
+    mode: 0600
