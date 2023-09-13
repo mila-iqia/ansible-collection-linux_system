@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+account default
+tls on
+tls_starttls on
+tls_certcheck off
+auth on
+host {{ msmtp_host }}
+port {{ msmtp_port }}
+user {{ msmtp_user }}
+from {{ msmtp_from }}
+password {{ msmtp_password }}
