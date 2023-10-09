@@ -1,0 +1,3 @@
+---
+# Group of Slurm controllers
+slurmctl_group: 'slurmservers'

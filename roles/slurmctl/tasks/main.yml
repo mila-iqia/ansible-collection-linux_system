@@ -1,6 +1,6 @@
 ---
 - name: Update sacctmgr
-  when: inventory_hostname == 'slurm'
+  when: inventory_hostname == (groups[slurmctl_group] | sort | first)
   block:
     - name: Send SLURM Accounts
       ansible.builtin.copy:
