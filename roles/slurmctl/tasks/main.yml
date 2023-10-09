@@ -1,26 +1,4 @@
 ---
-- name: Disable sssd
-  ansible.builtin.systemd:
-    name: sssd.service
-    state: stopped
-    enabled: no
-
-- name: Send Groups
-  ansible.builtin.copy:
-    src: /tmp/slurmdb/LDAP-group
-    dest: /etc/group
-    owner: root
-    group: root
-    mode: 0644
-
-- name: Send Password
-  ansible.builtin.copy:
-    src: /tmp/slurmdb/LDAP-passwd
-    dest: /etc/passwd
-    owner: root
-    group: root
-    mode: 0644
-
 - name: Update sacctmgr
   when: inventory_hostname == 'slurm'
   block:
