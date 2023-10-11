@@ -50,17 +50,17 @@ override_homedir = {{ gsuite_override_homedir }}
 {% endif %}
 
 # Access control
-access_provider = simple
+access_provider = {{ gsuite_access_provider }}
 simple_allow_groups = {{ gsuite_authorized_groups }}
 
 # Allow same UID/GID
-auto_private_groups = true
+auto_private_groups = {{ gsuite_auto_private_groups }}
 
 # No cache cleaning
-ldap_purge_cache_timeout = 0
+ldap_purge_cache_timeout = {{ gsuite_ldap_purge_cache_timeout }}
 
 # Do not download full list for getent group
-ignore_group_members = true
+ignore_group_members = {{ gsuite_ignore_group_members }
 
 {% if gsuite_sssd_enumerate is defined %}
 enumerate = {{ gsuite_sssd_enumerate }}
