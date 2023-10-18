@@ -23,5 +23,6 @@
     src: "{{ item.source }}"
     fstype: "{{ item.fstype | default('ext4') }}"
     opts: "{{ item.opts | default(omit) }}"
+    passno: "{{ item.passno | default(omit) }}"
     state: "{{ item.state | default('mounted') }}"
   loop: "{{ mount_volumes }}"
