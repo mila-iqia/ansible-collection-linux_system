@@ -1,0 +1,10 @@
+[Unit]
+Before=systemd-logind.service
+
+[Slice]
+{% for property in cgroups_properties %}
+{{ property.name }}={{ property.value }}
+{% endfor %}
+
+[Install]
+WantedBy=multi-user.target

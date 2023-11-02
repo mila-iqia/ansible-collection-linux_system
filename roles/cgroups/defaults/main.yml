@@ -2,3 +2,6 @@
 cgroups_properties:
   - name: TasksMax
     value: '1000'
+
+# List of uid for which no cgroups limits must be set
+cgroups_uid_no_limits: []

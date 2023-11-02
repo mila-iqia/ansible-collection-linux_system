@@ -109,19 +109,37 @@
 - name: Use user-.slice.d drop-in if systemd version is 239 and above
   when: systemd_version[:3] | int >= 239
   block:
-    - name: Create base directory
+    - name: Create base directory /etc/systemd/system/user-.slice.d
       ansible.builtin.file:
         path: /etc/systemd/system/user-.slice.d
         state: directory
         mode: 0755
 
-    - name: Copy default limit drop-in
-      ansible.builtin.copy:
-        src: login-limits.conf
+    - name: Copy default limits drop-in
+      ansible.builtin.template:
+        src: limits.conf.j2
         dest: /etc/systemd/system/user-.slice.d/limits.conf
         owner: root
         group: root
         mode: 0644
+
+    - name: Create users directories /etc/systemd/system/user-$UID.slice.d
+      ansible.builtin.file:
+        path: "/etc/systemd/system/user-{{ item }}.slice.d"
+        state: directory
+        mode: 0755
+      loop: "{{ cgroups_uid_no_limits }}"
+
+    - name: Copy users limits drop-in
+      vars:
+        cgroups_properties: []
+      ansible.builtin.template:
+        src: limits.conf.j2
+        dest: "/etc/systemd/system/user-{{ item }}.slice.d/limits.conf"
+        owner: root
+        group: root
+        mode: 0644
+      loop: "{{ cgroups_uid_no_limits }}"
 
 - name: Check if cgroups v2 is enabled
   ansible.builtin.stat:
