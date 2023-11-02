@@ -6,5 +6,5 @@ if [ "${PAM_UID}" -ge 1000 ]; then
     /bin/systemctl set-property "user-${PAM_UID}.slice" \
 {% for property in cgroups_properties %}
         {{ property.name }}={{ property.value }} \
-{% endfor %} 
+{% endfor %}
 fi
