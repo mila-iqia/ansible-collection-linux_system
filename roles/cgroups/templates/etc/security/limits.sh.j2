@@ -7,4 +7,5 @@ if [ "${PAM_UID}" -ge 1000 ]; then
 {% for property in cgroups_properties %}
         {{ property.name }}={{ property.value }} \
 {% endfor %}
+
 fi
