@@ -5,7 +5,6 @@ gsuite_search_base: "dc=acme,dc=com"
 gsuite_user_search_base: "ou=Users,dc=acme,dc=com"
 gsuite_group_search_base: "ou=Groups,dc=acme,dc=com"
 gsuite_authorized_groups: "admins"
-# gsuite_ldap_mirror: "https://example.com/ldap_mirror.git"
 
 # SSSD configuration
 gsuite_access_provider: "simple"
