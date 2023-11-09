@@ -1,0 +1,13 @@
+---
+# Gsuite LDAP
+sssd_cert_name: "Google_2023_05_25_67658"
+sssd_search_base: "dc=acme,dc=com"
+sssd_user_search_base: "ou=Users,dc=acme,dc=com"
+sssd_group_search_base: "ou=Groups,dc=acme,dc=com"
+sssd_authorized_groups: "admins"
+
+# SSSD configuration
+sssd_access_provider: "simple"
+sssd_auto_private_groups: true
+sssd_ignore_group_members: true
+sssd_ldap_purge_cache_timeout: 0

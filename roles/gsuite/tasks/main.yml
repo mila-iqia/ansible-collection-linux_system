@@ -1,4 +1,0 @@
----
-# Connect to Gsuite LDAP
-- ansible.builtin.import_tasks: gsuite.yml
-  when: gsuite|default(true)|bool

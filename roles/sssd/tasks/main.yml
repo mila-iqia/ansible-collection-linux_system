@@ -1,0 +1,4 @@
+---
+# Connect to Gsuite LDAP
+- ansible.builtin.import_tasks: sssd.yml
+  when: sssd|default(true)|bool
