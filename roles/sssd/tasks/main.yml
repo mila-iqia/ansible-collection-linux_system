@@ -1,4 +1,10 @@
 ---
-# Connect to Gsuite LDAP
+# Connect to LDAP backend with SSSD
 - ansible.builtin.import_tasks: sssd.yml
   when: sssd|default(true)|bool
+
+- ansible.builtin.import_tasks: ipa_auth.yml
+  when:
+    - sssd_provider == "ipa"
+    - sssd_ipa_auth
+    - sssd|default(true)|bool

@@ -1,0 +1,24 @@
+---
+- name: Install keytab to /etc/krb5.keytab
+  ansible.builtin.copy:
+    content: "{{ sssd_ipa_keytab | mandatory | b64decode }}"
+    dest: /etc/krb5.keytab
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Ensure /etc/ipa exists
+  ansible.builtin.file:
+    path: /etc/ipa
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+
+- name: Install IPA Certificate
+  ansible.builtin.copy:
+    content: "{{ sssd_ipa_ca_crt | mandatory }}"
+    dest: /etc/ipa/ca.crt
+    owner: root
+    group: root
+    mode: '0644'

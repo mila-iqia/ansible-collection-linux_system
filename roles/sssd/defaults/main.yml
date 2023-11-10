@@ -5,9 +5,17 @@ sssd_search_base: "dc=acme,dc=com"
 sssd_user_search_base: "ou=Users,dc=acme,dc=com"
 sssd_group_search_base: "ou=Groups,dc=acme,dc=com"
 sssd_authorized_groups: "admins"
+sssd_provider: gsuite
 
 # SSSD configuration
 sssd_access_provider: "simple"
 sssd_auto_private_groups: true
 sssd_ignore_group_members: true
 sssd_ldap_purge_cache_timeout: 0
+
+# Install krb5.keytab and ca.crt for IPA auth
+# Useful for hosts where FreeIPA client is not installed
+sssd_ipa_auth: false
+# Variables below are mandatory if sssd_ipa_auth is true
+# sssd_ipa_keytab: <keytab_content>
+# sssd_ipa_ca_crt: <ca.crt content>
