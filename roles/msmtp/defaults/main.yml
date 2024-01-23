@@ -1,3 +1,6 @@
 ---
 msmtp_host: smtp.gmail.com
 msmtp_port: 587
+
+# Set to true to enable msmtp MTA
+msmtp_mta_enabled: false

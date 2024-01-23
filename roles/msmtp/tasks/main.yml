@@ -9,5 +9,19 @@
     src: msmtprc.j2
     dest: /etc/msmtprc
     owner: root
-    group: root
-    mode: 0600
+    group: msmtp
+    mode: 0640
+
+- name: Configure msmtp MTA
+  when: msmtp_mta_enabled
+  block:
+    - name: Install msmtp-mta
+      ansible.builtin.package:
+        name:
+          - msmtp-mta
+
+    - name: Enable msmtpd
+      ansible.builtin.systemd:
+        name: msmtpd.service
+        state: started
+        enabled: true
