@@ -35,111 +35,38 @@
   ansible.builtin.command: update-grub2
   when: cgroup_v2.stdout == "0"
 
-- name: Get packages facts
-  ansible.builtin.package_facts:
-    manager: auto
+# Use user-.slice.d drop-in (requires systemd version >= 239)
+- name: Create base directory /etc/systemd/system/user-.slice.d
+  ansible.builtin.file:
+    path: /etc/systemd/system/user-.slice.d
+    state: directory
+    mode: 0755
 
-- name: Set fact Systemd version
-  ansible.builtin.set_fact:
-    systemd_version: "{{ ansible_facts.packages['systemd'] | map(attribute='version') | first }}"
+- name: Copy default limits drop-in
+  ansible.builtin.template:
+    src: limits.conf.j2
+    dest: /etc/systemd/system/user-.slice.d/limits.conf
+    owner: root
+    group: root
+    mode: 0644
 
-####
-# This task was used for legacy loginnodes (login[1-4]) but disabled since
-# GEN-1939. We keep track of this as current loginnodes in production runs
-# this particular systemd version.
-###
-# - name: Install Systemd 240 compiled with GLIBC 2.27
-# command: >
-#   dpkg -i \
-#     /ai/packages/x86_64/debian/systemd240/systemd_240-6ubuntu5.8_amd64.deb \
-#     /ai/packages/x86_64/debian/systemd240/systemd-sysv_240-6ubuntu5.8_amd64.deb \
-#     /ai/packages/x86_64/debian/systemd240/libnss-systemd_240-6ubuntu5.8_amd64.deb \
-#     /ai/packages/x86_64/debian/systemd240/libsystemd-dev_240-6ubuntu5.8_amd64.deb \
-#     /ai/packages/x86_64/debian/systemd240/libsystemd0_240-6ubuntu5.8_amd64.deb \
-#     /ai/packages/x86_64/debian/systemd240/libpam-systemd_240-6ubuntu5.8_amd64.deb
-# environment:
-#   DEBIAN_FRONTEND: noninteractive
-# when: systemd_version[:3] != "240"
-####
+- name: Create users directories /etc/systemd/system/user-$UID.slice.d
+  ansible.builtin.file:
+    path: "/etc/systemd/system/user-{{ item }}.slice.d"
+    state: directory
+    mode: 0755
+  loop: "{{ cgroups_uid_no_limits }}"
 
-- name: Use pam_exec and custom bash script if systemd version is below 239
-  when: systemd_version[:3] | int < 239
-  block:
-    # copy scripts with limits
-    - name: Copy script to apply limits
-      ansible.builtin.template:
-        src: etc/security/limits.sh.j2
-        dest: /etc/security/limits.sh
-        mode: 0755
-        owner: root
-        group: root
-
-    # Edit systemd default config
-    - name: Enable CPU Accounting
-      ansible.builtin.lineinfile:
-        path: /etc/systemd/system.conf
-        regexp: 'DefaultCPUAccounting'
-        line: 'DefaultCPUAccounting=yes'
-
-    - name: Enable BlockIO Accounting
-      ansible.builtin.lineinfile:
-        path: /etc/systemd/system.conf
-        regexp: 'DefaultBlockIOAccounting'
-        line: 'DefaultBlockIOAccounting=yes'
-
-    - name: Enable Memory Accounting
-      ansible.builtin.lineinfile:
-        path: /etc/systemd/system.conf
-        regexp: 'DefaultMemoryAccounting'
-        line: 'DefaultMemoryAccounting=yes'
-
-    - name: Enable Tasks Accounting
-      ansible.builtin.lineinfile:
-        path: /etc/systemd/system.conf
-        regexp: 'DefaultTasksAccounting'
-        line: 'DefaultTasksAccounting=yes'
-
-    # Edit pam.d/common-session file
-    - name: Enable pam_exec with custom script to set cgroups limits
-      ansible.builtin.lineinfile:
-        path: /etc/pam.d/common-session
-        regexp: 'pam_exec'
-        line: 'session required        pam_exec.so    type=open_session /etc/security/limits.sh'
-
-- name: Use user-.slice.d drop-in if systemd version is 239 and above
-  when: systemd_version[:3] | int >= 239
-  block:
-    - name: Create base directory /etc/systemd/system/user-.slice.d
-      ansible.builtin.file:
-        path: /etc/systemd/system/user-.slice.d
-        state: directory
-        mode: 0755
-
-    - name: Copy default limits drop-in
-      ansible.builtin.template:
-        src: limits.conf.j2
-        dest: /etc/systemd/system/user-.slice.d/limits.conf
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: Create users directories /etc/systemd/system/user-$UID.slice.d
-      ansible.builtin.file:
-        path: "/etc/systemd/system/user-{{ item }}.slice.d"
-        state: directory
-        mode: 0755
-      loop: "{{ cgroups_uid_no_limits }}"
-
-    - name: Copy users limits drop-in
-      vars:
-        cgroups_properties: []
-      ansible.builtin.template:
-        src: limits.conf.j2
-        dest: "/etc/systemd/system/user-{{ item }}.slice.d/limits.conf"
-        owner: root
-        group: root
-        mode: 0644
-      loop: "{{ cgroups_uid_no_limits }}"
+- name: Copy users limits drop-in
+  vars:
+    cgroups_properties: []
+  ansible.builtin.template:
+    src: limits.conf.j2
+    dest: "/etc/systemd/system/user-{{ item }}.slice.d/limits.conf"
+    owner: root
+    group: root
+    mode: 0644
+  loop: "{{ cgroups_uid_no_limits }}"
 
 - name: Check if cgroups v2 is enabled
   ansible.builtin.stat:
