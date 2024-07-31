@@ -24,3 +24,16 @@
   when: item.client_configd is defined
   notify:
     - Reload autofs
+
+- name: Ensure /cvmfs /etc/auto.cvmfs --timeout=0 in /etc/auto.master
+  ansible.builtin.lineinfile:
+    path: /etc/auto.master.d/cvmfs.autofs
+    regexp: '^/cvmfs\s+/etc/auto.cvmfs.*'
+    line: '/cvmfs /etc/auto.cvmfs --timeout=0'
+    owner: root
+    group: root
+    mode: '0644'
+    state: present
+    create: yes
+    notify:
+      - Reload autofs
