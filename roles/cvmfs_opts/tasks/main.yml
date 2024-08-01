@@ -35,5 +35,5 @@
     mode: '0644'
     state: present
     create: yes
-    notify:
-      - Reload autofs
+  notify:
+    - Reload autofs
