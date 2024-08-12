@@ -1,0 +1,20 @@
+---
+# List of volumes to mount
+#
+# Example:
+# mount_volumes:
+#   - path: /network/home
+#     source: nfs.example.tld:/home
+#     fstype: nfs
+#     opts: 'vers=3'
+#   - path: /var/opt/slurm/localstorage
+#     source: /dev/nvme1n1
+#     fstype: ext4
+#     owner: root  # Default
+#     group: root  # Default
+#     mode: 1777
+#   - path: /opt/apps
+#     state: absent
+#     source: ''
+#
+mount_volumes: []

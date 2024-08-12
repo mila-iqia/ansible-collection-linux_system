@@ -7,6 +7,7 @@
     mode: "{{ item.mode | default('0755') }}"
     state: directory
   loop: "{{ mount_volumes }}"
+  when: mount_volumes | length > 0
 
 - name: Create File Systems
   community.general.filesystem:
@@ -15,7 +16,9 @@
     state: present
   loop: "{{ mount_volumes }}"
   # Create file system only when source starts with '/dev/'
-  when: item.source[:5] == '/dev/'
+  when:
+    - mount_volumes | length > 0
+    - item.source[:5] == '/dev/'
 
 - name: Mount File Systems
   ansible.posix.mount:
@@ -26,3 +29,4 @@
     passno: "{{ item.passno | default(omit) }}"
     state: "{{ item.state | default('mounted') }}"
   loop: "{{ mount_volumes }}"
+  when: mount_volumes | length > 0
