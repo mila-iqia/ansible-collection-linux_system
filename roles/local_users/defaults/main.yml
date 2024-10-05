@@ -1,0 +1,12 @@
+---
+local_users_ansible_pub_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKa2w3ybG8z7DaebAAzspXMWTlIgokQgfFBF8rXnh8rl"
+local_users_security_gitlab_runners: []
+local_users_admins_gid: 2000
+local_users_admins: []
+local_users_authorized_keys_cache: "/var/cache/authorized_keys"
+local_users_authorized_keys_path: /etc/mila_authorized_keys
+local_users_authorized_keys_url: ""
+local_users_operators_gid: 3000
+local_users_operators: []
+local_users_service_accounts_gid: 4000
+local_users_service_accounts: []

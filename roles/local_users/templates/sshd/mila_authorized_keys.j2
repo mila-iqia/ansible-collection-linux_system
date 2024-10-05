@@ -1,6 +1,6 @@
 #!/bin/bash
-CACHE={{ mila_authorized_keys_cache }}/mila
-GDOCS='{{ mila_authorized_keys_url }}'
+CACHE={{ local_users_authorized_keys_cache }}/mila
+GDOCS='{{ local_users_authorized_keys_url }}'
 USER=$1
 GKEY=$(mktemp) || exit 1
 

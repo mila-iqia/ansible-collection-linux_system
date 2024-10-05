@@ -1,0 +1,55 @@
+---
+- name: Set local_users_ansible_pub_key=ansible_pub_key
+  when: ansible_pub_key is defined
+  ansible.builtin.set_fact:
+    local_users_ansible_pub_key: "{{ ansible_pub_key }}"
+
+- name: Set local_users_security_gitlab_runners=security_gitlab_runners
+  when: security_gitlab_runners is defined
+  ansible.builtin.set_fact:
+    local_users_security_gitlab_runners: "{{ security_gitlab_runners }}"
+
+- name: Set local_users_admins_gid=mila_admins_gid
+  when: mila_admins_gid is defined
+  ansible.builtin.set_fact:
+    local_users_admins_gid: "{{ mila_admins_gid }}"
+
+- name: Set local_users_admins=mila_admins
+  when: mila_admins is defined
+  ansible.builtin.set_fact:
+    local_users_admins: "{{ mila_admins }}"
+
+- name: Set local_users_authorized_keys_cache=mila_authorized_keys_cache
+  when: mila_authorized_keys_cache is defined
+  ansible.builtin.set_fact:
+    local_users_authorized_keys_cache: "{{ mila_authorized_keys_cache }}"
+
+- name: Set local_users_authorized_keys_path=mila_authorized_keys_path
+  when: mila_authorized_keys_path is defined
+  ansible.builtin.set_fact:
+    local_users_authorized_keys_path: "{{ mila_authorized_keys_path }}"
+
+- name: Set local_users_authorized_keys_url=mila_authorized_keys_url
+  when: mila_authorized_keys_url is defined
+  ansible.builtin.set_fact:
+    local_users_authorized_keys_url: "{{ mila_authorized_keys_url }}"
+
+- name: Set local_users_operators_gid=mila_operators_gid
+  when: mila_operators_gid is defined
+  ansible.builtin.set_fact:
+    local_users_operators_gid: "{{ mila_operators_gid }}"
+
+- name: Set local_users_operators=mila_operators
+  when: mila_operators is defined
+  ansible.builtin.set_fact:
+    local_users_operators: "{{ mila_operators }}"
+
+- name: Set local_users_service_accounts_gid=mila_service_accounts_gid
+  when: mila_service_accounts_gid is defined
+  ansible.builtin.set_fact:
+    local_users_service_accounts_gid: "{{ mila_service_accounts_gid }}"
+
+- name: Set local_users_service_accounts=mila_service_accounts
+  when: mila_service_accounts is defined
+  ansible.builtin.set_fact:
+    local_users_service_accounts: "{{ mila_service_accounts }}"
