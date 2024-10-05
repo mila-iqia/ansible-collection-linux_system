@@ -1,0 +1,10 @@
+---
+- name: Ensure mountpoints permissions are correct
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0755') }}"
+    state: directory
+  loop: "{{ mount_volumes }}"
+  when: mount_volumes | length > 0
