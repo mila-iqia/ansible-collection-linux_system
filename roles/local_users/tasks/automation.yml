@@ -28,6 +28,7 @@
     key: "{{ local_users_ansible_pub_key | mandatory }}"
 
 - name: Open access to user ansible
+  when: local_users_security_gitlab_runners | length > 0
   ansible.builtin.blockinfile:
     path: /etc/security/access.conf
     block: |
