@@ -3,7 +3,7 @@
   ansible.builtin.group:
     name: mila_admins
     state: present
-    gid: "{{ mila_admins_gid }}"
+    gid: "{{ local_users_admins_gid }}"
 
 - name: Allow 'admins' group to have passwordless sudo
   ansible.builtin.copy:
@@ -20,7 +20,7 @@
     uid: "{{ item.uid }}"
     password: "{{ item.password }}"
     update_password: always
-  loop: "{{ mila_admins }}"
+  loop: "{{ local_users_admins }}"
   loop_control:
     label: "{{ item.name }}"
 
@@ -28,13 +28,13 @@
   ansible.builtin.file:
     path: "/home/{{ item.name }}-local/.ssh/authorized_keys"
     state: absent
-  loop: "{{ mila_admins }}"
+  loop: "{{ local_users_admins }}"
   loop_control:
     label: "{{ item.name }}"
 
 - name: Ensure authorized_keys cache exists
   ansible.builtin.file:
-    path: "{{ mila_authorized_keys_cache }}"
+    path: "{{ local_users_authorized_keys_cache }}"
     state: directory
     mode: 0700
     owner: nobody
@@ -42,7 +42,7 @@
 - name: Copy authorized_key template
   ansible.builtin.template:
     src: sshd/mila_authorized_keys.j2
-    dest: "{{ mila_authorized_keys_path }}"
+    dest: "{{ local_users_authorized_keys_path }}"
     mode: 0755
     owner: root
     group: root
@@ -55,7 +55,7 @@
 
 - name: Get defined list of admins
   ansible.builtin.set_fact:
-    _defined_admins: "{{ mila_admins | map(attribute='name') | list }}"
+    _defined_admins: "{{ local_users_admins | map(attribute='name') | list }}"
 
 - name: Slurp /etc/passwd file
   ansible.builtin.slurp:
@@ -66,7 +66,7 @@
   ansible.builtin.set_fact:
     _configured_admins: '{{ _configured_admins + [item.split("-") | first] }}'
   loop: "{{ (_passwd_file['content'] | b64decode).splitlines() |
-     select('match', '^[a-z0-9-.]+:x:[0-9]+:' + mila_admins_gid | string + ':') |
+     select('match', '^[a-z0-9-.]+:x:[0-9]+:' + local_users_admins_gid | string + ':') |
      list }}"
   no_log: true
 

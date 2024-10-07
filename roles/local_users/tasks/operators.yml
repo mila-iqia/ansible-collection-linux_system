@@ -3,11 +3,11 @@
   ansible.builtin.group:
     name: mila_operators
     state: present
-    gid: "{{ mila_operators_gid }}"
+    gid: "{{ local_users_operators_gid }}"
 
 - name: Add operator
   ansible.builtin.include_tasks: create_operator.yml
-  loop: "{{ mila_operators }}"
+  loop: "{{ local_users_operators }}"
   loop_control:
     label: "{{ item.name }}"
   when: inventory_hostname in item.hosts
@@ -21,7 +21,7 @@
 - name: Get defined list of operators
   ansible.builtin.set_fact:
     _defined_operators: "{{ _defined_operators + [item.name] }}"
-  loop: "{{ mila_operators }}"
+  loop: "{{ local_users_operators }}"
   loop_control:
     label: "{{ item.name }}"
   when: inventory_hostname in item.hosts
@@ -35,7 +35,7 @@
   ansible.builtin.set_fact:
     _configured_operators: '{{ _configured_operators + [item.split("-") | first] }}'
   loop: "{{ (_passwd_file['content'] | b64decode).splitlines() |
-     select('match', '^[a-z0-9-.]+:x:[0-9]+:' + mila_operators_gid | string + ':') |
+     select('match', '^[a-z0-9-.]+:x:[0-9]+:' + local_users_operators_gid | string + ':') |
      list }}"
   no_log: true
 
