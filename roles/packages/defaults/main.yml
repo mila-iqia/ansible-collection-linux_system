@@ -1,0 +1,6 @@
+---
+# List of packages to install
+packages_install_list: []
+
+# List of packages to remove
+packages_remove_list: []
