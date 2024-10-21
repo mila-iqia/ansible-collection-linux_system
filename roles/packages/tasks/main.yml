@@ -1,0 +1,16 @@
+---
+- name: Check legacy packages variables
+  ignore_errors: true
+  when: packages_present is defined or packages_absent is defined
+  ansible.builtin.fail:
+    msg: "WARNING: Variables `packages_present` and `packages_absent` are deprecated"
+
+- name: Install packages
+  ansible.builtin.package:
+    name: "{{ packages_install_list + (packages_present | default([])) }}"
+    state: present
+
+- name: Uninstall packages
+  ansible.builtin.package:
+    name: "{{ packages_remove_list + (packages_absent | default([])) }}"
+    state: absent
