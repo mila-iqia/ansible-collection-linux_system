@@ -1,0 +1,5 @@
+---
+repositories_apt: []
+
+# Remove or keep /etc/apt/sources.list
+repositories_remove_apt_sources: false

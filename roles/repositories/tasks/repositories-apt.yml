@@ -1,0 +1,42 @@
+---
+- name: Install GPG-KEY - {{ item.name }}
+  when:
+   - item.key is defined
+   - item.state is not defined or item.state != 'absent'
+  notify: Update repository cache
+  ansible.builtin.get_url:
+    url: "{{ item.key }}"
+    dest: "/etc/apt/trusted.gpg.d/{{ item.name }}.asc"
+    checksum: "{{ item.key_checksum | mandatory }}"
+
+- name: Remove GPG-KEY - {{ item.name }}
+  when:
+   - item.state is defined
+   - item.state == 'absent'
+  notify: Update repository cache
+  ansible.builtin.file:
+    path: "/etc/apt/trusted.gpg.d/{{ item.name }}.asc"
+    state: absent
+
+- name: Configure repository - {{ item.name }}
+  notify: Update repository cache
+  ansible.builtin.apt_repository:
+    repo: "{{ item.repository }}"
+    filename: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+
+- name: Configure APT priority - {{ item.name }}
+  when: item.apt_pin_priority is defined
+  ansible.builtin.copy:
+    content: |
+      Package: {{ item.apt_pin_package | default('*') }}
+      Pin: {{ item.apt_pin | default('release n=' + item.name) }}
+      Pin-Priority: {{ item.apt_pin_priority }}
+    dest: "/etc/apt/preferences.d/priority-{{ item.name }}"
+    mode: "0644"
+
+- name: Remove APT priority - {{ item.name }}
+  when: item.apt_pin_priority is not defined
+  ansible.builtin.file:
+    path: "/etc/apt/preferences.d/priority-{{ item.name }}"
+    state: absent

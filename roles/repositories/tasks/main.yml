@@ -1,0 +1,17 @@
+---
+- name: Configure APT repositories
+  ansible.builtin.include_tasks:
+    file: "repositories-apt.yml"
+  loop: "{{ repositories_apt }}"
+
+- name: Remove /etc/apt/sources.list
+  when:
+    - ansible_facts['os_family'] == "Debian"
+    - repositories_remove_apt_sources | bool
+  notify: Update repository cache
+  ansible.builtin.file:
+    path: /etc/apt/sources.list
+    state: absent
+
+- name: Run handlers to update the reposiory cache
+  ansible.builtin.meta: flush_handlers
