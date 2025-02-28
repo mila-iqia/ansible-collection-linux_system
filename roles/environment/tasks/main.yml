@@ -1,0 +1,34 @@
+---
+- name: Configure /etc/environment
+  when: environment_file is defined
+  ansible.builtin.copy:
+    content: "{{ environment_file }}"
+    dest: /etc/environment
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Source /etc/profile.d/ in bashrc
+  ansible.builtin.blockinfile:
+    insertafter: "^# System-wide .bashrc.*"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - SOURCE /etc/profile.d/"
+    path: /etc/bash.bashrc
+    owner: root
+    group: root
+    mode: '0644'
+    state: "{{ environment_source_profiled | bool | ternary('present', 'absent') }}"
+    block: "{{ __environment_profiled_bashrc }}"
+
+- name: Configure /etc/profile.d/
+  loop: "{{ environment_profile_files }}"
+  ansible.builtin.copy:
+    content: "{{ item.content }}"
+    dest: "/etc/profile.d/{{ item.name }}"
+    owner: root
+    group: root
+    mode: '0644'
+    state: "{{ item.state | default('present') }}"
+
+- name: Import tasks for CC/DRAC environments
+  when: environment_cc_env
+  ansible.builtin.import_tasks: cc_env.yml

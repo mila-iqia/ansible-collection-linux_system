@@ -1,0 +1,21 @@
+---
+- name: Use lesspipe from DRAC StdEnv
+  when: ansible_facts['os_family'] == "Debian"
+  ansible.builtin.lineinfile:
+    path: /etc/skel/.bashrc
+    regexp: '^(\[ -x /usr/bin/lesspipe \].*)'
+    line: '# Use lesspipe from DRAC StdEnv # \g<1>'
+    backrefs: true
+
+- name: Ensure CC_CLUSTER is defined in /etc/environment
+  block:
+    - name: Read /etc/environment
+      check_mode: false
+      ansible.builtin.slurp:
+        src: /etc/environment
+      register: __etc_environment
+
+    - name: Check for CC_CLUSTER
+      ansible.builtin.assert:
+        that: __etc_environment['content'] | b64decode | regex_search('^CC_CLUSTER=', multiline=True)
+        fail_msg: "CC_CLUSTER must be set in /etc/environment when `environment_cc_env=true`"

@@ -1,0 +1,19 @@
+---
+# Define environment variables in /etc/environment
+# environment_file: |
+#   ARCH={{ ansible_facts['architecture'] }}
+
+# Define files to install in /etc/profile.d/
+# environment_profile_files:
+#   - name: 01-cluster.sh
+#     content: |
+#       export SCRATCH="/scratch/${USER:0:1}/${USER}"
+#   - name: 02-foo.sh
+#     state: absent
+environment_profile_files: []
+
+# Source /etc/profile.d/*.sh in bashrc
+environment_source_profiled: true
+
+# Enable/disable integration with CC/DRAC environment
+environment_cc_env: false
