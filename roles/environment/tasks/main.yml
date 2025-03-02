@@ -21,13 +21,20 @@
 
 - name: Configure /etc/profile.d/
   loop: "{{ environment_profile_files }}"
+  when: item.state is not defined or item.state == "present"
   ansible.builtin.copy:
     content: "{{ item.content }}"
     dest: "/etc/profile.d/{{ item.name }}"
     owner: root
     group: root
     mode: '0644'
-    state: "{{ item.state | default('present') }}"
+
+- name: Cleanup /etc/profile.d/
+  loop: "{{ environment_profile_files }}"
+  when: item.state is defined and item.state == "absent"
+  ansible.builtin.file:
+    path: "/etc/profile.d/{{ item.name }}"
+    state: absent
 
 - name: Import tasks for CC/DRAC environments
   when: environment_cc_env
