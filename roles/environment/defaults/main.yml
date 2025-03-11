@@ -17,3 +17,14 @@ environment_source_profiled: true
 
 # Enable/disable integration with CC/DRAC environment
 environment_cc_env: false
+
+# List of NVIDIA packages for which libraries must be installed in
+# /usr/lib64/nvidia for CC/DRAC environment
+#
+# environment_cc_env_nvidia_packages:
+#   - libnvidia-cfg1-565
+#   - libnvidia-compute-565
+#   - libnvidia-encode-565
+#   - libnvidia-extra-565
+#   - libnvidia-fbc1-565
+#   - libnvidia-gl-565
