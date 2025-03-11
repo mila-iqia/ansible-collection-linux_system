@@ -19,3 +19,47 @@
       ansible.builtin.assert:
         that: __etc_environment['content'] | b64decode | regex_search('^CC_CLUSTER=', multiline=True)
         fail_msg: "CC_CLUSTER must be set in /etc/environment when `environment_cc_env=true`"
+
+# See https://docs.alliancecan.ca/wiki/Accessing_CVMFS#CUDA_location
+- name: Ensure CUDA location is /usr/lib64/nvidia
+  when: environment_cc_env_nvidia_packages is defined
+  block:
+    - name: List files installed from NVIDIA packages
+      ansible.builtin.command: "dpkg -L {{ item }}"
+      loop: "{{ environment_cc_env_nvidia_packages }}"
+      register: __libnvidia
+      changed_when: false
+
+    - name: Search files in /usr/lib/x86_64-linux-gnu/.*.so.*
+      ansible.builtin.set_fact:
+        __libnvidia_files: "{{ __libnvidia_files | default([]) | union(item.stdout_lines | select('search', '^/usr/lib/x86_64-linux-gnu/.*\\.so.*') | list) }}"
+      loop: "{{ __libnvidia.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+
+    - name: Ensure /usr/lib64/nvidia/ directory exists
+      ansible.builtin.file:
+        path: /usr/lib64/nvidia/
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Ensure /usr/lib64/nvidia/ subdirectories exist
+      when: (item | regex_search('^/usr/lib/x86_64-linux-gnu/(.*)/', '\\1')) != None
+      ansible.builtin.file:
+        path: "/usr/lib64/nvidia/{{ item | regex_search('^/usr/lib/x86_64-linux-gnu/(.*)/', '\\1') | first }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      loop: "{{ __libnvidia_files }}"
+
+    - name: Create symbolic links in /usr/lib64/nvidia/
+      ansible.builtin.file:
+        src: "{{ item }}"
+        dest: "/usr/lib64/nvidia/{{ item | regex_search('^/usr/lib/x86_64-linux-gnu/(.*)', '\\1') | first }}"
+        state: link
+        owner: root
+        group: root
+      loop: "{{ __libnvidia_files }}"
