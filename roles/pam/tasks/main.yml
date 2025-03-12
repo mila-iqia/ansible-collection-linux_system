@@ -1,0 +1,25 @@
+---
+- name: Configure pam.d files
+  loop: "{{ pam_config }}"
+  when: pam_config is defined
+  community.general.pamd:
+    backup: "{{ item.backup | default(omit) }}"
+    control: "{{ item.control | mandatory }}"
+    module_arguments: "{{ item.module_path | default(omit) }}"
+    module_path: "{{ item.module_path | mandatory }}"
+    name: "{{ item.name | mandatory }}"
+    new_control: "{{ item.new_control | default(omit) }}"
+    new_module_path: "{{ item.new_module_path | default(omit) }}"
+    new_type: "{{ item.new_type | default(omit) }}"
+    path: "{{ item.path | default(omit) }}"
+    state: "{{ item.state | default(omit) }}"
+    type: "{{ item.type | mandatory }}"
+
+- name: Configure /etc/security/access.conf
+  when: pam_access_conf is defined         
+  ansible.builtin.copy:                    
+    content: "{{ pam_access_conf }}"       
+    dest: /etc/security/access.conf        
+    owner: root                            
+    group: root                            
+    mode: '0644'                           
