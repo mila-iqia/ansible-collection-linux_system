@@ -14,5 +14,6 @@ This repository is used to configure hosts inside the Mila infrastructure.
 * msmtp
 * multipath
 * [packages](roles/packages/README.md)
+* [pam](roles/pam/README.md)
 * sssd
 * time
