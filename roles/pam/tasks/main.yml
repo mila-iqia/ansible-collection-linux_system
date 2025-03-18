@@ -5,7 +5,7 @@
   community.general.pamd:
     backup: "{{ item.backup | default(omit) }}"
     control: "{{ item.control | mandatory }}"
-    module_arguments: "{{ item.module_path | default(omit) }}"
+    module_arguments: "{{ item.module_arguments | default(omit) }}"
     module_path: "{{ item.module_path | mandatory }}"
     name: "{{ item.name | mandatory }}"
     new_control: "{{ item.new_control | default(omit) }}"
