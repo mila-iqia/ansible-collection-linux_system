@@ -10,6 +10,7 @@ This repository is used to configure hosts inside the Mila infrastructure.
 * fail2ban
 * local_users
 * modules
+* [motd](roles/motd/README.md)
 * mount
 * msmtp
 * multipath
