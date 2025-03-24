@@ -1,0 +1,58 @@
+---
+- name: Configure /etc/update-motd.d/
+  when: ansible_facts['os_family'] == "Debian"
+  block:
+    - name: Find unmanaged scripts in /etc/update-motd.d
+      ansible.builtin.find:
+        paths: /etc/update-motd.d
+        file_type: any
+        excludes: "{{ motd_scripts | map(attribute='name') }}"
+      register: __update_motd_d
+
+    - name: Disable unmanaged scripts in /etc/update-motd.d
+      ansible.builtin.file:
+        dest: "{{ item.path }}"
+        owner: root
+        group: root
+        mode: "0640"
+      loop: "{{ __update_motd_d.files }}"
+      loop_control:
+        label: "Disable motd script {{ item.path }}"
+
+    - name: Copy motd scripts
+      when: item.content is defined
+      ansible.builtin.template:
+        src: motd_script.j2
+        dest: "/etc/update-motd.d/{{ item.name }}"
+        owner: root
+        group: root
+        mode: "0755"
+      loop: "{{ motd_scripts }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Enable motd scripts
+      when: item.content is not defined
+      ansible.builtin.file:
+        path: "/etc/update-motd.d/{{ item.name }}"
+        owner: root
+        group: root
+        mode: "0755"
+      loop: "{{ motd_scripts }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+- name: Copy /etc/motd
+  when: motd_content is defined
+  ansible.builtin.copy:
+    content: "{{ motd_content }}"
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Remove /etc/motd
+  when: motd_content is not defined
+  ansible.builtin.file:
+    path: /etc/motd
+    state: absent
