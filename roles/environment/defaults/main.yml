@@ -28,3 +28,9 @@ environment_cc_env: false
 #   - libnvidia-extra-565
 #   - libnvidia-fbc1-565
 #   - libnvidia-gl-565
+
+# Configuration for the httpproxy module
+# environment_proxy_http: http://squid.example.tld:3128
+# environment_proxy_https: http://squid.example.tld:3128
+# environment_proxy_rsync: squid.example.tld:3128
+# environment_no_proxy: example.tld

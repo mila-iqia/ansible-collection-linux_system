@@ -39,3 +39,7 @@
 - name: Import tasks for CC/DRAC environments
   when: environment_cc_env
   ansible.builtin.import_tasks: cc_env.yml
+
+- name: Configure httpproxy module for Lmod
+  when: environment_proxy_http is defined
+  ansible.builtin.import_tasks: lmod_httpproxy.yml

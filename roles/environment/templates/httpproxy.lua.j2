@@ -1,0 +1,5 @@
+setenv("http_proxy","{{ environment_proxy_http | mandatory }}")
+setenv("https_proxy","{{ environment_proxy_https | mandatory }}")
+setenv("rsync_proxy","{{ environment_proxy_rsync | mandatory }}")
+setenv("RSYNC_PROXY","{{ environment_proxy_rsync | mandatory }}")
+setenv("no_proxy", "{{ environment_no_proxy | mandatory }}")
