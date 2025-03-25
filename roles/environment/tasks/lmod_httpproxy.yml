@@ -1,0 +1,22 @@
+---
+- name: Configure httpproxy module for Lmod
+  block:
+    - name: Ensure /opt/software/modulefiles/httpproxy/ exists
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+      loop:
+        - /opt/software/
+        - /opt/software/modulefiles/
+        - /opt/software/modulefiles/httpproxy/
+
+    - name: Install httpproxy/1.0.lua file
+      ansible.builtin.template:
+        src: httpproxy.lua.j2
+        dest: /opt/software/modulefiles/httpproxy/1.0.lua
+        owner: root
+        group: root
+        mode: "0644"
