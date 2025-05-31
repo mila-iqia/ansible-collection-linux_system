@@ -6,24 +6,19 @@
 - name: Ensure vars existence
   ansible.builtin.assert:
     that:
-      - multipath_vendor is defined
       - multipath_product is defined
-    fail_msg: "Missing variables definition in inventory : check multipath_vendor, multipath_product"
+      - multipath_vendor is defined
+      - multipath_volumes is defined
+    fail_msg: "Missing variables definition in inventory : check multipath_product, multipath_vendor, multipath_volumes"
 
-- name: Upload multipath config file
+- name: Configure multipath.conf
   ansible.builtin.template:
     src: "multipath.conf.j2"
     dest: /etc/multipath.conf
     mode: '0644'
     owner: root
     group: root
-  notify: Ensure multipathd service is restarted and enabled
+  notify: Restart multipathd service
 
 - name: Force handlers to run
   ansible.builtin.meta: flush_handlers
-
-- name: Ensure vars existence
-  ansible.builtin.assert:
-    that:
-      - multipath_volumes is defined
-    fail_msg: "The list of volumes must be defined in multipath_volumes"
