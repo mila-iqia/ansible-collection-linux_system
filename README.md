@@ -4,7 +4,7 @@ This repository is used to configure hosts inside the Mila infrastructure.
 
 ## Roles
 
-* cgroups
+* [cgroups](roles/cgroups/README.md)
 * cvmfs_opts
 * [environment](roles/environment/README.md)
 * fail2ban
