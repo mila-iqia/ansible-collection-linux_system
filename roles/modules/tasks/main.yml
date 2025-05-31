@@ -58,7 +58,6 @@
     dest: /etc/profile.d/z00_lmod.sh
     state: link
     force: yes
-  when: ansible_facts['os_family'] != 'RedHat' or ansible_facts['distribution_major_version'] != "7"
 
 - name: Lmod bourne
   ansible.builtin.file:
@@ -66,7 +65,6 @@
     dest: /etc/profile.d/z00_lmod.csh
     state: link
     force: yes
-  when: ansible_facts['os_family'] != 'RedHat' or ansible_facts['distribution_major_version'] != "7"
 
 - name: Lmod fish
   ansible.builtin.file:
@@ -75,42 +73,3 @@
     state: link
     force: yes
   when: ansible_facts['os_family'] == 'Debian'
-
-# Trick for rhel7 backward compatibility for old services which will use debian lua5.1
-- name: Redhat 7 uses old debian module
-  when:
-    - ansible_facts['os_family'] == 'RedHat'
-    - ansible_facts['distribution_major_version'] == "7"
-    - ansible_architecture == "x86_64"
-  block:
-
-    - name: Install lua RedHat
-      ansible.builtin.yum:
-        name:
-          - http://packages.psychotic.ninja/7/plus/x86_64/RPMS/tcl-8.6.3-1.el7.psychotic.x86_64.rpm
-
-    - name: Create a directory if it does not exist
-      ansible.builtin.file:
-        path: /usr/lib/lua/
-        state: directory
-        mode: '0755'
-
-    - name: Symlink for RedHat
-      ansible.builtin.file:
-        src: /usr/lib64/lua/5.1
-        dest: /usr/lib/lua/5.1
-        state: link
-
-    - name: Lmod bash
-      ansible.builtin.file:
-        src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/debian/lmod/lmod/init/profile
-        dest: /etc/profile.d/z00_lmod.sh
-        state: link
-        force: yes
-
-    - name: Lmod bourne
-      ansible.builtin.file:
-        src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/debian/lmod/lmod/init/cshrc
-        dest: /etc/profile.d/z00_lmod.csh
-        state: link
-        force: yes
