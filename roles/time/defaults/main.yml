@@ -1,12 +1,4 @@
 ---
-# NTP
-chrony_service:
-  Debian: chrony
-  RedHat: chronyd
-chrony_conf:
-  Debian: /etc/chrony/chrony.conf
-  RedHat: /etc/chrony.conf
-
 # ntp_server is deprecated and will be removed in a next release. Use
 # time_servers instead which is a list of NTP servers.
 # time_servers: ['0.pool.ntp.org','1.pool.ntp.org']

@@ -11,13 +11,13 @@
 - name: Generate chrony.conf file
   ansible.builtin.template:
     src: chrony.conf.j2
-    dest: "{{ chrony_conf[ansible_facts['os_family']] }}"
+    dest: "{{ __chrony_conf[ansible_facts['os_family']] }}"
     mode: 0644
   notify: Restart chrony
 
 - name: Start chrony
   ansible.builtin.systemd:
-    name: "{{ chrony_service[ansible_facts['os_family']] }}"
+    name: "{{ __chrony_service[ansible_facts['os_family']] }}"
     state: started
     enabled: yes
 
