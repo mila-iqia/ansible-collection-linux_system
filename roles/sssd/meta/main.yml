@@ -1,6 +1,0 @@
----
-dependencies:  # noqa meta-no-info
-  - role: certificate
-    vars:
-      certificates: "{{ certificates_gsuite }}"
-    when: sssd|default(true)|bool
