@@ -12,7 +12,7 @@ This repository is used to configure hosts inside the Mila infrastructure.
 * modules
 * [motd](roles/motd/README.md)
 * [mount](roles/mount/README.md)
-* msmtp
+* [msmtp](roles/msmtp/README.md)
 * [multipath](roles/multipath/README.md)
 * [packages](roles/packages/README.md)
 * [pam](roles/pam/README.md)

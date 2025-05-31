@@ -4,7 +4,7 @@
     name:
       - msmtp
 
-- name: Generate /etc/msmtprc
+- name: Configure /etc/msmtprc
   ansible.builtin.template:
     src: msmtprc.j2
     dest: /etc/msmtprc
@@ -12,7 +12,7 @@
     group: msmtp
     mode: 0640
 
-- name: Configure msmtp MTA
+- name: Install msmtp MTA
   when: msmtp_mta_enabled
   block:
     - name: Install msmtp-mta
