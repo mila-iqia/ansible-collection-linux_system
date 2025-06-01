@@ -1,0 +1,8 @@
+---
+# Exclude paths that don't need linting
+exclude_paths:
+  - .github/
+
+# Trigger warning instead of error
+warn_list:
+  - no-changed-when  # Warn when tasks don't use changed_when
