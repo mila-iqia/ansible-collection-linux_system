@@ -16,10 +16,10 @@
     type: "{{ item.type | mandatory }}"
 
 - name: Configure /etc/security/access.conf
-  when: pam_access_conf is defined         
-  ansible.builtin.copy:                    
-    content: "{{ pam_access_conf }}"       
-    dest: /etc/security/access.conf        
-    owner: root                            
-    group: root                            
-    mode: '0644'                           
+  when: pam_access_conf is defined
+  ansible.builtin.copy:
+    content: "{{ pam_access_conf }}"
+    dest: /etc/security/access.conf
+    owner: root
+    group: root
+    mode: '0644'
