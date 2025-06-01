@@ -37,11 +37,3 @@
     owner: root
     group: root
     mode: '0755'
-
-- name: Lmod fish
-  ansible.builtin.file:
-    src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/profile.fish
-    dest: /etc/fish/conf.d/z00_lmod.fish
-    state: link
-    force: true
-  when: ansible_facts['os_family'] == 'Debian'

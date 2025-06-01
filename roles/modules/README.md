@@ -65,9 +65,5 @@ None
 
 ## Notes
 
-* The role assumes the presence of CVMFS for accessing Mila-specific configurations:
-  * `/cvmfs/ai.mila.quebec/` for Lmod initialization scripts
-* Shell configurations are installed in the appropriate system directories:
-  * `/etc/fish/conf.d/` for fish (Debian only)
-  * `/etc/zsh/` for zsh profile
-* Module system is configured to work with the Mila software stack
+* The role installs a global zsh profile by copying a `zprofile` file to
+  `/etc/zsh/` that sources `/etc/profile`.

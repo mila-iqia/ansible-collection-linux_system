@@ -36,6 +36,32 @@
     path: "/etc/profile.d/{{ item.name }}"
     state: absent
 
+- name: Check if fish conf.d directory exists
+  ansible.builtin.stat:
+    path: /etc/fish/conf.d
+  register: __fish_confd
+
+- name: Configure /etc/fish/conf.d/
+  loop: "{{ environment_fish_files }}"
+  when:
+    - __fish_confd.stat.exists
+    - item.state is not defined or item.state == "present"
+  ansible.builtin.copy:
+    content: "{{ item.content }}"
+    dest: "/etc/fish/conf.d/{{ item.name }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Cleanup /etc/fish/conf.d/
+  loop: "{{ environment_fish_files }}"
+  when:
+    - __fish_confd.stat.exists
+    - item.state is defined and item.state == "absent"
+  ansible.builtin.file:
+    path: "/etc/fish/conf.d/{{ item.name }}"
+    state: absent
+
 - name: Import tasks for CC/DRAC environments
   when: environment_cc_env
   ansible.builtin.import_tasks: cc_env.yml
