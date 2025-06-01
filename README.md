@@ -9,7 +9,7 @@ This repository is used to configure hosts inside the Mila infrastructure.
 * [environment](roles/environment/README.md)
 * [fail2ban](roles/fail2ban/README.md)
 * local_users
-* modules
+* [modules](roles/modules/README.md)
 * [motd](roles/motd/README.md)
 * [mount](roles/mount/README.md)
 * [msmtp](roles/msmtp/README.md)
