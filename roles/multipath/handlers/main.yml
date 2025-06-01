@@ -1,5 +1,5 @@
 ---
-- name: Ensure multipathd service is restarted and enabled
+- name: Restart multipathd service
   ansible.builtin.service:
     name: multipathd
     state: restarted

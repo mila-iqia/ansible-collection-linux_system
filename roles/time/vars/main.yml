@@ -1,0 +1,7 @@
+---
+__chrony_service:
+  Debian: chrony
+  RedHat: chronyd
+__chrony_conf:
+  Debian: /etc/chrony/chrony.conf
+  RedHat: /etc/chrony.conf

@@ -1,3 +1,75 @@
 ---
-# Activate module
-- ansible.builtin.import_tasks: modules.yml
+- name: Install lua Debian
+  ansible.builtin.apt:
+    name:
+      - lua5.1
+      - liblua5.1-0
+      - liblua5.1-0-dev
+      - lua-json
+      - lua-filesystem
+      - lua-filesystem-dev
+      - lua-posix
+      - tcl
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install lua RedHat
+  ansible.builtin.yum:
+    name:
+      - lua
+      - lua-json
+      - lua-filesystem
+      - lua-posix
+      - tcl
+  when: ansible_facts['os_family'] == 'RedHat'
+
+- name: Install other shells
+  ansible.builtin.package:
+    name:
+      - fish
+      - zsh
+    state: present
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Force zsh to load profile
+  ansible.builtin.copy:
+    src: zprofile
+    dest: /etc/zsh/
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Mila default profile bash
+  ansible.builtin.file:
+    src: /cvmfs/config.mila.quebec/etc/profile.d/.z00_Mila.sh
+    dest: /etc/profile.d/z99_Mila.sh
+    state: link
+    force: yes
+
+- name: Mila default profile bourne
+  ansible.builtin.file:
+    src: /cvmfs/config.mila.quebec/etc/profile.d/.z00_Mila.csh
+    dest: /etc/profile.d/z99_Mila.csh
+    state: link
+    force: yes
+
+- name: Lmod bash
+  ansible.builtin.file:
+    src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/profile
+    dest: /etc/profile.d/z00_lmod.sh
+    state: link
+    force: yes
+
+- name: Lmod bourne
+  ansible.builtin.file:
+    src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/cshrc
+    dest: /etc/profile.d/z00_lmod.csh
+    state: link
+    force: yes
+
+- name: Lmod fish
+  ansible.builtin.file:
+    src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/profile.fish
+    dest: /etc/fish/conf.d/z00_lmod.fish
+    state: link
+    force: yes
+  when: ansible_facts['os_family'] == 'Debian'

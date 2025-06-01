@@ -1,9 +1,9 @@
 ---
-- name: Set timezone to America/Toronto
+- name: Set timezone
   community.general.timezone:
     name: "{{ time_timezone }}"
 
-- name: Ensure chrony packages are installed.
+- name: Ensure chrony packages are installed
   ansible.builtin.package:
     name: chrony
     state: present
@@ -11,21 +11,12 @@
 - name: Generate chrony.conf file
   ansible.builtin.template:
     src: chrony.conf.j2
-    dest: "{{ chrony_conf[ansible_facts['os_family']] }}"
+    dest: "{{ __chrony_conf[ansible_facts['os_family']] }}"
     mode: 0644
   notify: Restart chrony
 
 - name: Start chrony
   ansible.builtin.systemd:
-    name: "{{ chrony_service[ansible_facts['os_family']] }}"
+    name: "{{ __chrony_service[ansible_facts['os_family']] }}"
     state: started
     enabled: yes
-
-# Copy keys from faiserver to each node
-# - name: NTP keys
-#   copy:
-#     src: /etc/ntp.keys
-#     dest: /etc/ntp.keys
-#     owner: root
-#     group: root
-#     mode: 0600

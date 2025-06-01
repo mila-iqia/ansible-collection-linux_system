@@ -1,6 +1,0 @@
----
-- name: Restart sssd
-  ansible.builtin.systemd:
-    name: sssd.service
-    state: restarted
-    enabled: yes
