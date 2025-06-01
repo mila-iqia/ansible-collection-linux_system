@@ -15,7 +15,7 @@
   ansible.builtin.user:
     name: "{{ item.name }}-local"
     shell: "{{ item.shell | default('/bin/bash') }}"
-    create_home: yes
+    create_home: true
     group: mila_admins
     uid: "{{ item.uid }}"
     password: "{{ item.password }}"
@@ -74,5 +74,5 @@
   ansible.builtin.user:
     name: "{{ item }}-local"
     state: absent
-    remove: yes
+    remove: true
   loop: "{{ _configured_admins | difference(_defined_admins) }}"

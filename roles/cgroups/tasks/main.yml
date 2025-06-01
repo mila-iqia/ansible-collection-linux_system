@@ -10,7 +10,7 @@
     path: "/etc/default/grub"
     regexp: 'GRUB_CMDLINE_LINUX_DEFAULT="(.*)"'
     line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 cgroup_enable=memory"'
-    backrefs: yes
+    backrefs: true
   when: cgroup_memory.stdout == "0"
 
 - name: Update-grub
@@ -28,7 +28,7 @@
     dest: "/etc/default/grub"
     regexp: 'GRUB_CMDLINE_LINUX_DEFAULT="(.*)"'
     line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 systemd.unified_cgroup_hierarchy"'
-    backrefs: yes
+    backrefs: true
   when: cgroup_v2.stdout == "0"
 
 - name: Update-grub

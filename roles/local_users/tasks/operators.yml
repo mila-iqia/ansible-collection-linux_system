@@ -43,7 +43,7 @@
   ansible.builtin.user:
     name: "{{ item }}-local"
     state: absent
-    remove: yes
+    remove: true
   loop: "{{ _configured_operators | difference(_defined_operators) }}"
 
 - name: Remove gone operators groups

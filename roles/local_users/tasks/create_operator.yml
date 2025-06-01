@@ -16,7 +16,7 @@
   ansible.builtin.user:
     name: "{{ item.name }}-local"
     shell: "{{ item.shell | default('/bin/bash') }}"
-    create_home: yes
+    create_home: true
     group: mila_operators
     groups:
       - "{{ item.name }}-local"

@@ -3,4 +3,4 @@
   ansible.builtin.systemd:
     name: "{{ __chrony_service[ansible_facts['os_family']] }}"
     state: restarted
-    enabled: yes
+    enabled: true

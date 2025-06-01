@@ -43,33 +43,33 @@
     src: /cvmfs/config.mila.quebec/etc/profile.d/.z00_Mila.sh
     dest: /etc/profile.d/z99_Mila.sh
     state: link
-    force: yes
+    force: true
 
 - name: Mila default profile bourne
   ansible.builtin.file:
     src: /cvmfs/config.mila.quebec/etc/profile.d/.z00_Mila.csh
     dest: /etc/profile.d/z99_Mila.csh
     state: link
-    force: yes
+    force: true
 
 - name: Lmod bash
   ansible.builtin.file:
     src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/profile
     dest: /etc/profile.d/z00_lmod.sh
     state: link
-    force: yes
+    force: true
 
 - name: Lmod bourne
   ansible.builtin.file:
     src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/cshrc
     dest: /etc/profile.d/z00_lmod.csh
     state: link
-    force: yes
+    force: true
 
 - name: Lmod fish
   ansible.builtin.file:
     src: /cvmfs/ai.mila.quebec/apps/{{ ansible_facts['architecture'] }}/{{ ansible_facts['os_family'] | lower }}/lmod/lmod/init/profile.fish
     dest: /etc/fish/conf.d/z00_lmod.fish
     state: link
-    force: yes
+    force: true
   when: ansible_facts['os_family'] == 'Debian'
