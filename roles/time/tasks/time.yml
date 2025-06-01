@@ -12,7 +12,7 @@
   ansible.builtin.template:
     src: chrony.conf.j2
     dest: "{{ __chrony_conf[ansible_facts['os_family']] }}"
-    mode: 0644
+    mode: '0644'
   notify: Restart chrony
 
 - name: Start chrony

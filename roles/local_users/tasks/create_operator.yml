@@ -10,7 +10,7 @@
   ansible.builtin.copy:
     content: "{{ item.name }}-local ALL=(ALL) NOPASSWD:ALL"
     dest: "/etc/sudoers.d/{{ item.name }}"
-    mode: 0440
+    mode: '0440'
 
 - name: Create operator user
   ansible.builtin.user:

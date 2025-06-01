@@ -10,7 +10,7 @@
     dest: "/etc/fail2ban/filter.d/{{ item.dest | default(item.src) }}"
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   notify: Restart fail2ban
   loop: "{{ fail2ban_filter_d_conf_files | default([]) }}"
 
@@ -20,7 +20,7 @@
     dest: "/etc/fail2ban/jail.d/{{ item.dest | default(item.src) }}"
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   notify: Restart fail2ban
   loop: "{{ fail2ban_jail_d_conf_templates | default([]) }}"
 
@@ -30,7 +30,7 @@
     dest: "/etc/fail2ban/action.d/{{ item.dest | default(item.src) }}"
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   notify: Restart fail2ban
   loop: "{{ fail2ban_action_d_conf_templates | default([]) }}"
 
@@ -40,7 +40,7 @@
     dest: "/etc/fail2ban/action.d/{{ item.dest | default(item.src) }}"
     owner: root
     group: root
-    mode: 0755
+    mode: '0755'
   notify: Restart fail2ban
   loop: "{{ fail2ban_action_d_sh_templates | default([]) }}"
 

@@ -9,7 +9,7 @@
   ansible.builtin.copy:
     content: '%mila_admins ALL=(ALL) NOPASSWD:ALL'
     dest: /etc/sudoers.d/mila_admins
-    mode: 0440
+    mode: '0440'
 
 - name: Create Mila admins
   ansible.builtin.user:
@@ -36,16 +36,16 @@
   ansible.builtin.file:
     path: "{{ local_users_authorized_keys_cache }}"
     state: directory
-    mode: 0700
     owner: nobody
+    mode: '0700'
 
 - name: Copy authorized_key template
   ansible.builtin.template:
     src: sshd/mila_authorized_keys.j2
     dest: "{{ local_users_authorized_keys_path }}"
-    mode: 0755
     owner: root
     group: root
+    mode: '0755'
 
 # Find and delete removed admins
 #
