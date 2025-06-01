@@ -1,2 +1,2 @@
 ---
-requires_ansible: ">=9"
+requires_ansible: '>=2.16'
