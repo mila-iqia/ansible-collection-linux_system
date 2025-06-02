@@ -5,4 +5,5 @@ exclude_paths:
 
 # Trigger warning instead of error
 warn_list:
+  - galaxy[no-changelog]  # Warn when changelog file is missing
   - no-changed-when  # Warn when tasks don't use changed_when
