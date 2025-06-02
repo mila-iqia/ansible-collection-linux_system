@@ -6,7 +6,7 @@
     dest: /etc/cvmfs/config.d/{{ cvmfs_config_repo.repository.repository }}.local
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   when:
     - cvmfs_config_repo is defined
     - cvmfs_config_repo.repository is defined
@@ -20,7 +20,7 @@
     dest: "/etc/cvmfs/config.d/{{ item.repository }}.local"
     owner: root
     group: root
-    mode: 0444
+    mode: '0444'
   loop: "{{ cvmfs_repositories }}"
   loop_control:
     label: "/etc/cvmfs/config.d/{{ item.repository }}.local"
@@ -37,6 +37,6 @@
     group: root
     mode: '0644'
     state: present
-    create: yes
+    create: true
   notify:
     - Reload autofs

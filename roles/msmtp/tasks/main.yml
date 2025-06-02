@@ -10,7 +10,7 @@
     dest: /etc/msmtprc
     owner: root
     group: msmtp
-    mode: 0640
+    mode: '0640'
 
 - name: Install msmtp MTA
   when: msmtp_mta_enabled

@@ -1,18 +1,18 @@
 ---
 # Initialize list of admins defined in the inventory.
-_defined_admins: []
+__local_users_defined_admins: []
 
 # Initialize list of admins configured in /etc/passwd.
-_configured_admins: []
+__local_users_configured_admins: []
 
 # Initialize list of operators defined in the inventory.
-_defined_operators: []
+__local_users_defined_operators: []
 
 # Initialize list of operators configured in /etc/passwd.
-_configured_operators: []
+__local_users_configured_operators: []
 
 # Initialize list of service accounts defined in the inventory.
-_defined_service_accounts: []
+__local_users_defined_service_accounts: []
 
 # Initialize list of service_accounts configured in /etc/passwd.
-_configured_service_accounts: []
+__local_users_configured_service_accounts: []

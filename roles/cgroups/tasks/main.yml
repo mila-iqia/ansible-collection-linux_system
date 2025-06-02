@@ -10,7 +10,7 @@
     path: "/etc/default/grub"
     regexp: 'GRUB_CMDLINE_LINUX_DEFAULT="(.*)"'
     line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 cgroup_enable=memory"'
-    backrefs: yes
+    backrefs: true
   when: cgroup_memory.stdout == "0"
 
 - name: Update-grub
@@ -28,7 +28,7 @@
     dest: "/etc/default/grub"
     regexp: 'GRUB_CMDLINE_LINUX_DEFAULT="(.*)"'
     line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 systemd.unified_cgroup_hierarchy"'
-    backrefs: yes
+    backrefs: true
   when: cgroup_v2.stdout == "0"
 
 - name: Update-grub
@@ -40,7 +40,7 @@
   ansible.builtin.file:
     path: /etc/systemd/system/user-.slice.d
     state: directory
-    mode: 0755
+    mode: '0755'
 
 - name: Copy default limits drop-in
   ansible.builtin.template:
@@ -48,13 +48,13 @@
     dest: /etc/systemd/system/user-.slice.d/limits.conf
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
 
 - name: Create users directories /etc/systemd/system/user-$UID.slice.d
   ansible.builtin.file:
     path: "/etc/systemd/system/user-{{ item }}.slice.d"
     state: directory
-    mode: 0755
+    mode: '0755'
   loop: "{{ cgroups_uid_no_limits }}"
 
 - name: Copy users limits drop-in
@@ -65,7 +65,7 @@
     dest: "/etc/systemd/system/user-{{ item }}.slice.d/limits.conf"
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   loop: "{{ cgroups_uid_no_limits }}"
 
 - name: Check if cgroups v2 is enabled

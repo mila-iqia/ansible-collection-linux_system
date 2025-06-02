@@ -9,24 +9,26 @@
       - curl
       - sudo
 
-# Configure user for automation
-- ansible.builtin.import_tasks: automation.yml
+- name: Configure user for automation
+  ansible.builtin.import_tasks: automation.yml
   tags:
     - local_automation
     - local_users
 
-# Add local users
-- ansible.builtin.import_tasks: admins.yml
+- name: Add local admins
+  ansible.builtin.import_tasks: admins.yml
   tags:
     - local_admins
     - local_users
 
-- ansible.builtin.import_tasks: operators.yml
+- name: Add local operators
+  ansible.builtin.import_tasks: operators.yml
   tags:
     - local_operators
     - local_users
 
-- ansible.builtin.import_tasks: service_accounts.yml
+- name: Add local service accounts
+  ansible.builtin.import_tasks: service_accounts.yml
   tags:
     - local_service_accounts
     - local_users

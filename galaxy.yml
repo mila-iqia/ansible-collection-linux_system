@@ -9,7 +9,7 @@ namespace: mila
 name: linux_system
 
 # The version of the collection. Must be compatible with semantic versioning
-version: 0.6.1
+version: 0.6.1  # noqa: galaxy[version-incorrect]
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
@@ -45,7 +45,9 @@ tags:
 # collection label 'namespace.name'. The value is a version range
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
 # range specifiers can be set and are separated by ','
-dependencies: {}
+dependencies:
+  "ansible.posix": ">=1.5.4"
+  "community.general": ">=8.6.1"
 
 # The URL of the originating SCM repository
 repository: https://github.com/mila-iqia/ansible-collection-linux_system

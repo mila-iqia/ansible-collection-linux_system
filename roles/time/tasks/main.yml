@@ -1,4 +1,4 @@
 ---
-# Activate timectl
-- ansible.builtin.import_tasks: time.yml
+- name: Configure time
+  ansible.builtin.import_tasks: time.yml
   when: baremetal|default(true)|bool
