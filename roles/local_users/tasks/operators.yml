@@ -20,7 +20,7 @@
 
 - name: Get defined list of operators
   ansible.builtin.set_fact:
-    _defined_operators: "{{ _defined_operators + [item.name] }}"
+    __local_users_defined_operators: "{{ __local_users_defined_operators + [item.name] }}"
   loop: "{{ local_users_operators }}"
   loop_control:
     label: "{{ item.name }}"
@@ -33,7 +33,7 @@
 
 - name: Get list of configured operators from /etc/passwd
   ansible.builtin.set_fact:
-    _configured_operators: '{{ _configured_operators + [item.split("-") | first] }}'
+    __local_users_configured_operators: '{{ __local_users_configured_operators + [item.split("-") | first] }}'
   loop: "{{ (_passwd_file['content'] | b64decode).splitlines() |
      select('match', '^[a-z0-9-.]+:x:[0-9]+:' + local_users_operators_gid | string + ':') |
      list }}"
@@ -44,16 +44,16 @@
     name: "{{ item }}-local"
     state: absent
     remove: true
-  loop: "{{ _configured_operators | difference(_defined_operators) }}"
+  loop: "{{ __local_users_configured_operators | difference(__local_users_defined_operators) }}"
 
 - name: Remove gone operators groups
   ansible.builtin.group:
     name: "{{ item }}-local"
     state: absent
-  loop: "{{ _configured_operators | difference(_defined_operators) }}"
+  loop: "{{ __local_users_configured_operators | difference(__local_users_defined_operators) }}"
 
 - name: Remove gone operators sudo
   ansible.builtin.file:
     path: "/etc/sudoers.d/{{ item }}"
     state: absent
-  loop: "{{ _configured_operators | difference(_defined_operators) }}"
+  loop: "{{ __local_users_configured_operators | difference(__local_users_defined_operators) }}"

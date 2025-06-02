@@ -1,6 +1,6 @@
 ---
 - name: Restart chrony
   ansible.builtin.systemd:
-    name: "{{ __chrony_service[ansible_facts['os_family']] }}"
+    name: "{{ __time_chrony_service[ansible_facts['os_family']] }}"
     state: restarted
     enabled: true

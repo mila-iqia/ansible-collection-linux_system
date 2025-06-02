@@ -55,7 +55,7 @@
 
 - name: Get defined list of admins
   ansible.builtin.set_fact:
-    _defined_admins: "{{ local_users_admins | map(attribute='name') | list }}"
+    __local_users_defined_admins: "{{ local_users_admins | map(attribute='name') | list }}"
 
 - name: Slurp /etc/passwd file
   ansible.builtin.slurp:
@@ -64,7 +64,7 @@
 
 - name: Get list of configured admins from /etc/passwd
   ansible.builtin.set_fact:
-    _configured_admins: '{{ _configured_admins + [item.split("-") | first] }}'
+    __local_users_configured_admins: '{{ __local_users_configured_admins + [item.split("-") | first] }}'
   loop: "{{ (_passwd_file['content'] | b64decode).splitlines() |
      select('match', '^[a-z0-9-.]+:x:[0-9]+:' + local_users_admins_gid | string + ':') |
      list }}"
@@ -75,4 +75,4 @@
     name: "{{ item }}-local"
     state: absent
     remove: true
-  loop: "{{ _configured_admins | difference(_defined_admins) }}"
+  loop: "{{ __local_users_configured_admins | difference(__local_users_defined_admins) }}"
