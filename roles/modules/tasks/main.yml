@@ -13,7 +13,7 @@
   when: ansible_facts['os_family'] == 'Debian'
 
 - name: Install lua RedHat
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name:
       - lua
       - lua-json

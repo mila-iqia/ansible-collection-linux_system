@@ -1,6 +1,6 @@
 ---
 - name: Install multipath packages
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     update_cache: true
     name:
       - device-mapper-multipath
