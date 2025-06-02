@@ -1,6 +1,6 @@
 ---
 - name: Check legacy packages variables
-  ignore_errors: true
+  ignore_errors: true  # noqa: ignore-errors
   when: packages_present is defined or packages_absent is defined
   ansible.builtin.fail:
     msg: "WARNING: Variables `packages_present` and `packages_absent` are deprecated"
