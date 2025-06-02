@@ -15,6 +15,9 @@ environment_profile_files: []
 # Source /etc/profile.d/*.sh in bashrc
 environment_source_profiled: true
 
+# List of files to manage in /etc/fish/conf.d/
+environment_fish_files: []
+
 # Enable/disable integration with CC/DRAC environment
 environment_cc_env: false
 

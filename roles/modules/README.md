@@ -14,9 +14,7 @@ environment across different Linux distributions.
   * Bash profile integration
   * Csh/Tcsh integration
   * Fish shell integration (Debian only)
-* Sets up Mila-specific configurations:
-  * Links Mila default profiles
-  * Configures Lmod initialization scripts
+  * Zsh profile configuration
 
 ## Role Variables
 
@@ -43,7 +41,6 @@ None
 * Installs additional shells:
   * fish
   * zsh
-* Configures all shell environments (bash, csh, fish)
 
 ### RedHat/CentOS
 * Installs Lua and required packages:
@@ -52,7 +49,6 @@ None
   * lua-filesystem
   * lua-posix
   * tcl
-* Configures bash and csh environments
 
 ## Example Playbook
 
@@ -69,11 +65,5 @@ None
 
 ## Notes
 
-* The role assumes the presence of CVMFS for accessing Mila-specific configurations:
-  * `/cvmfs/config.mila.quebec/` for Mila profiles
-  * `/cvmfs/ai.mila.quebec/` for Lmod initialization scripts
-* Shell configurations are installed in the appropriate system directories:
-  * `/etc/profile.d/` for bash and csh
-  * `/etc/fish/conf.d/` for fish (Debian only)
-  * `/etc/zsh/` for zsh profile
-* Module system is configured to work with the Mila software stack
+* The role installs a global zsh profile by copying a `zprofile` file to
+  `/etc/zsh/` that sources `/etc/profile`.
