@@ -7,7 +7,7 @@
         paths: /etc/update-motd.d
         file_type: any
         excludes: "{{ motd_scripts | map(attribute='name') }}"
-      register: __update_motd_d
+      register: __motd_update_motd_d
 
     - name: Disable unmanaged scripts in /etc/update-motd.d
       ansible.builtin.file:
@@ -15,7 +15,7 @@
         owner: root
         group: root
         mode: "0640"
-      loop: "{{ __update_motd_d.files }}"
+      loop: "{{ __motd_update_motd_d.files }}"
       loop_control:
         label: "Disable motd script {{ item.path }}"
 
