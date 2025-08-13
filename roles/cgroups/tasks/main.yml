@@ -2,8 +2,8 @@
 - name: Check if cgroup memory in kernel
   ansible.builtin.command: grep -c '^GRUB_CMDLINE_LINUX_DEFAULT=.*cgroup_enable=memory' /etc/default/grub
   changed_when: false
-  register: cgroup_memory
-  failed_when: "cgroup_memory.rc > 1"
+  register: __cgroups_memory
+  failed_when: "__cgroups_memory.rc > 1"
 
 - name: Enable cgroup memory
   ansible.builtin.lineinfile:
@@ -11,17 +11,17 @@
     regexp: 'GRUB_CMDLINE_LINUX_DEFAULT="(.*)"'
     line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 cgroup_enable=memory"'
     backrefs: true
-  when: cgroup_memory.stdout == "0"
+  when: __cgroups_memory.stdout == "0"
 
 - name: Update-grub
   ansible.builtin.command: update-grub2
-  when: cgroup_memory.stdout == "0"
+  when: __cgroups_memory.stdout == "0"
 
 - name: Check if cgroup v2 in kernel
   ansible.builtin.command: grep -c '^GRUB_CMDLINE_LINUX_DEFAULT=.*systemd.unified_cgroup_hierarchy' /etc/default/grub
   changed_when: false
-  register: cgroup_v2
-  failed_when: "cgroup_v2.rc > 1"
+  register: __cgroups_v2
+  failed_when: "__cgroups_v2.rc > 1"
 
 - name: Enable cgroup memory
   ansible.builtin.lineinfile:
@@ -29,11 +29,11 @@
     regexp: 'GRUB_CMDLINE_LINUX_DEFAULT="(.*)"'
     line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 systemd.unified_cgroup_hierarchy"'
     backrefs: true
-  when: cgroup_v2.stdout == "0"
+  when: __cgroups_v2.stdout == "0"
 
 - name: Update-grub
   ansible.builtin.command: update-grub2
-  when: cgroup_v2.stdout == "0"
+  when: __cgroups_v2.stdout == "0"
 
 # Use user-.slice.d drop-in (requires systemd version >= 239)
 - name: Create base directory /etc/systemd/system/user-.slice.d

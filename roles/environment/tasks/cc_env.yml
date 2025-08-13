@@ -13,11 +13,11 @@
       check_mode: false
       ansible.builtin.slurp:
         src: /etc/environment
-      register: __etc_environment
+      register: __environment_etc
 
     - name: Check for CC_CLUSTER
       ansible.builtin.assert:
-        that: __etc_environment['content'] | b64decode | regex_search('^CC_CLUSTER=', multiline=True)
+        that: __environment_etc['content'] | b64decode | regex_search('^CC_CLUSTER=', multiline=True)
         fail_msg: "CC_CLUSTER must be set in /etc/environment when `environment_cc_env=true`"
 
 # See https://docs.alliancecan.ca/wiki/Accessing_CVMFS#CUDA_location
@@ -27,13 +27,13 @@
     - name: List files installed from NVIDIA packages
       ansible.builtin.command: "dpkg -L {{ item }}"
       loop: "{{ environment_cc_env_nvidia_packages }}"
-      register: __libnvidia
+      register: __environment_libnvidia
       changed_when: false
 
     - name: Search files in /usr/lib/x86_64-linux-gnu/.*.so.*
       ansible.builtin.set_fact:
         __libnvidia_files: "{{ __libnvidia_files | default([]) | union(item.stdout_lines | select('search', '^/usr/lib/x86_64-linux-gnu/.*\\.so.*') | list) }}"
-      loop: "{{ __libnvidia.results }}"
+      loop: "{{ __environment_libnvidia.results }}"
       loop_control:
         label: "{{ item.item }}"
 

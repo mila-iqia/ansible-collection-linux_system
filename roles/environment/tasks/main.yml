@@ -39,12 +39,12 @@
 - name: Check if fish conf.d directory exists
   ansible.builtin.stat:
     path: /etc/fish/conf.d
-  register: __fish_confd
+  register: __environment_fish_confd
 
 - name: Configure /etc/fish/conf.d/
   loop: "{{ environment_fish_files }}"
   when:
-    - __fish_confd.stat.exists
+    - __environment_fish_confd.stat.exists
     - item.state is not defined or item.state == "present"
   ansible.builtin.copy:
     content: "{{ item.content }}"
@@ -56,7 +56,7 @@
 - name: Cleanup /etc/fish/conf.d/
   loop: "{{ environment_fish_files }}"
   when:
-    - __fish_confd.stat.exists
+    - __environment_fish_confd.stat.exists
     - item.state is defined and item.state == "absent"
   ansible.builtin.file:
     path: "/etc/fish/conf.d/{{ item.name }}"
