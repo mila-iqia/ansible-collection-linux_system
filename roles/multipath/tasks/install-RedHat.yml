@@ -2,5 +2,6 @@
 - name: Install multipath packages
   ansible.builtin.dnf:
     update_cache: true
+    use_backend: "{{ (ansible_facts['distribution_major_version'] | int <= 7) | ternary('dnf', 'auto') }}"
     name:
       - device-mapper-multipath

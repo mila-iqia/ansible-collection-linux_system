@@ -14,6 +14,7 @@
 
 - name: Install lua RedHat
   ansible.builtin.dnf:
+    use_backend: "{{ (ansible_facts['distribution_major_version'] | int <= 7) | ternary('dnf', 'auto') }}"
     name:
       - lua
       - lua-json
