@@ -9,7 +9,7 @@ namespace: mila
 name: linux_system
 
 # The version of the collection. Must be compatible with semantic versioning
-version: 0.7.0  # noqa: galaxy[version-incorrect]
+version: 0.7.1  # noqa: galaxy[version-incorrect]
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
