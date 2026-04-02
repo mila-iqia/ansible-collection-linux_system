@@ -70,22 +70,22 @@
         file_type: link
         follow: false
         recurse: true
-      register: __usr_lib64_nvidia_symlinks
+      register: __environment_usr_lib64_nvidia_symlinks
 
     - name: Check symlink targets
       ansible.builtin.stat:
         path: "{{ item.path }}"
         follow: true
-      loop: "{{ __usr_lib64_nvidia_symlinks.files }}"
+      loop: "{{ __environment_usr_lib64_nvidia_symlinks.files }}"
       loop_control:
         label: "{{ item.path }}"
-      register: __usr_lib64_nvidia_symlinks_stats
+      register: __environment_usr_lib64_nvidia_symlinks_stats
 
     - name: Remove broken symlinks
       ansible.builtin.file:
         path: "{{ item.item.path }}"
         state: absent
-      loop: "{{ __usr_lib64_nvidia_symlinks_stats.results }}"
+      loop: "{{ __environment_usr_lib64_nvidia_symlinks_stats.results }}"
       loop_control:
         label: "{{ item.item.path }}"
       when: not item.stat.exists
