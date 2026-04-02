@@ -63,3 +63,29 @@
         owner: root
         group: root
       loop: "{{ __libnvidia_files }}"
+
+    - name: Find all symlinks in /usr/lib64/nvidia/
+      ansible.builtin.find:
+        paths: /usr/lib64/nvidia/
+        file_type: link
+        follow: false
+        recurse: true
+      register: __usr_lib64_nvidia_symlinks
+
+    - name: Check symlink targets
+      ansible.builtin.stat:
+        path: "{{ item.path }}"
+        follow: true
+      loop: "{{ __usr_lib64_nvidia_symlinks.files }}"
+      loop_control:
+        label: "{{ item.path }}"
+      register: __usr_lib64_nvidia_symlinks_stats
+
+    - name: Remove broken symlinks
+      ansible.builtin.file:
+        path: "{{ item.item.path }}"
+        state: absent
+      loop: "{{ __usr_lib64_nvidia_symlinks_stats.results }}"
+      loop_control:
+        label: "{{ item.item.path }}"
+      when: not item.stat.exists
