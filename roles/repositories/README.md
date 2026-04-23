@@ -3,7 +3,11 @@ Repositories
 
 This role configures repositories.
 
-Current version only supports APT. Support of DNF/Yum will be added later.
+Current version only supports APT.
+Excluding Ubuntu 24 and later version support
+due to source.list new format and location.
+
+Support of DNF/Yum will be added later.
 
 Role Variables
 --------------
