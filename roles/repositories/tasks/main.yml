@@ -16,6 +16,11 @@
         path: /etc/apt/sources.list
         state: absent
 
-    - name: Run handlers to update the reposiory cache
-      ansible.builtin.meta: flush_handlers
+- name: Configure APT priority
+  when: item.apt_pin_priority is defined
+  ansible.builtin.include_tasks:
+    file: "priority-apt.yml"
+  loop: "{{ priority_apt }}"
 
+- name: Run handlers to update the reposiory cache
+  ansible.builtin.meta: flush_handlers

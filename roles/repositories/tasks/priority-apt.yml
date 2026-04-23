@@ -1,0 +1,15 @@
+- name: Configure APT priority - {{ item.name }}
+  when: item.apt_pin_priority is defined
+  ansible.builtin.copy:
+    content: |
+      Package: {{ item.apt_pin_package | default('*') }}
+      Pin: {{ item.apt_pin | default('release n=' + item.name) }}
+      Pin-Priority: {{ item.apt_pin_priority }}
+    dest: "/etc/apt/preferences.d/priority-{{ item.name }}"
+    mode: "0644"
+
+- name: Remove APT priority - {{ item.name }}
+  when: item.apt_pin_priority is not defined
+  ansible.builtin.file:
+    path: "/etc/apt/preferences.d/priority-{{ item.name }}"
+    state: absent
