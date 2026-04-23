@@ -1,18 +1,19 @@
 ---
 - name: Install GPG-KEY - {{ item.name }}
   when:
-   - item.key is defined
-   - item.state is not defined or item.state != 'absent'
+    - item.key is defined
+    - item.state is not defined or item.state != 'absent'
   notify: Update repository cache
   ansible.builtin.get_url:
     url: "{{ item.key }}"
     dest: "/etc/apt/trusted.gpg.d/{{ item.name }}.asc"
+    mode: "0644"
     checksum: "{{ item.key_checksum | mandatory }}"
 
 - name: Remove GPG-KEY - {{ item.name }}
   when:
-   - item.state is defined
-   - item.state == 'absent'
+    - item.state is defined
+    - item.state == 'absent'
   notify: Update repository cache
   ansible.builtin.file:
     path: "/etc/apt/trusted.gpg.d/{{ item.name }}.asc"
