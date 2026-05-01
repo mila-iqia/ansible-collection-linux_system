@@ -46,7 +46,7 @@ adaptable to other environments.
 * [motd](roles/motd/README.md) - Message of the day configuration
 * [packages](roles/packages/README.md) - Package management
 * [pam](roles/pam/README.md) - PAM authentication configuration
-* [repositories](roles/repositories/README.md)
+* [repositories](roles/repositories/README.md) - Repositories management and pin priority packages
 * [time](roles/time/README.md) - Time synchronization
 
 ### Security
