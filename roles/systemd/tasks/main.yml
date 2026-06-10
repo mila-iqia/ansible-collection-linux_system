@@ -1,0 +1,9 @@
+---
+- name: Create directory /etc/systemd/system.conf.d
+  ansible.builtin.file:
+    path: /etc/systemd/system.conf.d
+    state: directory
+    mode: '0644'
+
+- name: Configure reboot timeout limit
+  ansible.builtin.import_tasks: timeout_limits.yml

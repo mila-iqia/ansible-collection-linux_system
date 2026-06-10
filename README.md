@@ -47,6 +47,7 @@ adaptable to other environments.
 * [packages](roles/packages/README.md) - Package management
 * [pam](roles/pam/README.md) - PAM authentication configuration
 * [repositories](roles/repositories/README.md) - Repositories management and pin priority packages
+* [systemd](roles/systemd/README.md) - System systemd configuration
 * [time](roles/time/README.md) - Time synchronization
 
 ### Security
