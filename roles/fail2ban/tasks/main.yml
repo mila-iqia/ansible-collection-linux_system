@@ -4,6 +4,16 @@
     name:
       - fail2ban
 
+- name: Copy fail2ban.d .conf files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "/etc/fail2ban/fail2ban.d/{{ item.dest | default(item.src) }}"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart fail2ban
+  loop: "{{ fail2ban_fail2ban_d_conf_files | default([]) }}"
+
 - name: Copy filter.d .conf files
   ansible.builtin.copy:
     src: "{{ item.src }}"
