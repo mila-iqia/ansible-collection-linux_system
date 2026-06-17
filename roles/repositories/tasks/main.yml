@@ -7,14 +7,17 @@
         file: "repositories-apt.yml"
       loop: "{{ repositories_apt }}"
 
-    - name: Remove /etc/apt/sources.list
+    - name: Remove default APT sources
       when:
         - ansible_facts['os_family'] == "Debian"
         - repositories_remove_apt_sources | bool
       notify: Update repository cache
       ansible.builtin.file:
-        path: /etc/apt/sources.list
+        path: '{{ item.path }}'
         state: absent
+      loop:
+        - { path: /etc/apt/sources.list}
+        - { path: /etc/apt/sources.list.d/debian.sources }
 
 - name: Configure APT priority
   when: item.apt_pin_priority is defined
