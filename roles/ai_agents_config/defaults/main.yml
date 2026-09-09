@@ -1,0 +1,8 @@
+---
+ai_agents_config_agents:
+  - name: claude
+    src: claude.json.j2
+    dest: /etc/claude-code/managed-settings.json
+  - name: codex
+    src: codex.toml.j2
+    dest: /etc/codex/config.toml
