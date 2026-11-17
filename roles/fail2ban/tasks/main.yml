@@ -62,3 +62,23 @@
     name: fail2ban.service
     state: started
     enabled: true
+
+- name: Configure the rsyslog to load the fail2ban log file
+  block:
+    - name: Copy the rsyslog config file for fail2ban
+      ansible.builtin.copy:
+        content: |
+          input(type="imfile"
+            File="/var/log/fail2ban.log"
+            Severity="info"
+            Facility="local6")
+        dest: /etc/rsyslog.d/02-fail2ban.conf
+        owner: root
+        group: root
+        mode: '0640'
+
+    - name: Restart rsyslog service
+      ansible.builtin.systemd:
+        name: rsyslog.service
+        state: restarted
+        enabled: yes
